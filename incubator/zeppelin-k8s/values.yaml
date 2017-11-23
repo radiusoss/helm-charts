@@ -1,0 +1,15 @@
+zeppelin:
+  image: datalayer/zeppelin-k8s:2.2.0-0.5.0
+  imagePullPolicy: IfNotPresent
+  resources:
+    limits:
+      memory: "4096Mi"
+      cpu: "2000m"
+hdfsK8s:
+  useConfigMap: false
+  configMapName: hdfs-k8s-hdfs-k8s
+  configPath: /etc/hdfs-k8s/conf
+spark:
+  driverMemory: 1g
+  executorMemory: 1g
+  numExecutors: 2
