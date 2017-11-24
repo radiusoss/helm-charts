@@ -49,7 +49,7 @@ spec:
       dnsPolicy: ClusterFirstWithHostNet
       containers:
         - name: hdfs-namenode
-          image: datalayer/hadoop-namenode:2.7.2
+          image: datalayer/hdfs-k8s-locality-nn:2.7.3
           env:
             - name: CORE_CONF_net_topology_node_switch_mapping_impl
               value: org.apache.hadoop.net.PodCIDRToNodeMapping

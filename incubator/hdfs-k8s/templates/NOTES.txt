@@ -4,18 +4,18 @@
    kubectl exec -n {{ .Release.Namespace }} -it {{ template "hdfs-k8s.fullname" . }}-hdfs-nn-0 -- hdfs dfsadmin -report
    kubectl exec -n {{ .Release.Namespace }} -it {{ template "hdfs-k8s.fullname" . }}-hdfs-nn-0 -- hdfs dfs -ls /
 
-2. This chart can also be used with the Zeppelin chart:
-   
-   helm upgrade -n {{ .Release.Namespace }} --set hdfs.dataNode.replicas=6 {{ template "hdfs-k8s.fullname" . }} {{ template "hdfs-k8s.fullname" . }}
-
-3. To access the Namenode user interface, type this command and point your browser to http://localhost:50070.
+2. To access the Namenode user interface, type this command and point your browser to http://localhost:50070.
 
    kubectl port-forward {{ template "hdfs-k8s.fullname" . }}-hdfs-nn-0 50070:50070
 
-4. This chart can also be used with the Zeppelin K8s chart:
+3. This chart can also be used with the Zeppelin K8s chart:
    
    helm install -n {{ .Release.Namespace }} --set hdfs-k8s.useConfigMap=true,hdfs-k8s.configMapName={{ template "hdfs-k8s.fullname" . }} zeppelin-k8s -n zeppelin-k8s
 
-5. In case of issue, open a shell and inspect the logs:
+4. In case of issue, open a shell and inspect the logs:
 
    kubectl exec -n {{ .Release.Namespace }} -it {{ template "hdfs-k8s.fullname" . }}-hdfs-nn-0 -- bash
+
+5. This chart can also be used with the Zeppelin chart:
+   
+   helm upgrade -n {{ .Release.Namespace }} --set hdfs.dataNode.replicas=6 {{ template "hdfs-k8s.fullname" . }} {{ template "hdfs-k8s.fullname" . }}

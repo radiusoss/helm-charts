@@ -57,5 +57,5 @@ kerberosKeytabsSecret: hdfs-kerberos-keytabs
 
 # Effective only if Kerberos is enabled. Enable protection of datanodes using
 # the jsvc utility. See the reference doc at
-# https://hadoop.apache.org/docs/r2.7.2/hadoop-project-dist/hadoop-common/SecureMode.html#Secure_DataNode
+# https://hadoop.apache.org/docs/r2.7.3/hadoop-project-dist/hadoop-common/SecureMode.html#Secure_DataNode
 jsvcEnabled: true

@@ -32,7 +32,7 @@ spec:
             - name: SPARK_HOME
               value: "/opt/spark"
             - name: HADOOP_CONF_DIR
-              value: "/etc/hdfs-k8s-locality/conf"
+              value: "/etc/hdfs-locality/conf"
 #            - name: ZEPPELIN_JAVA_OPTS
 #              value: >-
 #                -Dspark.driver.memory={{ .Values.spark.driverMemory }}
