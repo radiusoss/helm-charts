@@ -30,7 +30,7 @@ spec:
       dnsPolicy: ClusterFirstWithHostNet
       containers:
         - name: datanode
-          image: datalayer/hdfs-k8s-locality-dn:2.7.3
+          image: datalayer/hdfs-k8s-locality-dn:2.9.0
           env:
             - name: CORE_CONF_net_topology_node_switch_mapping_impl
               value: org.apache.hadoop.net.PodCIDRToNodeMapping

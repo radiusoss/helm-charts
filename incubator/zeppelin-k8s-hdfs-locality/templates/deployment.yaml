@@ -23,6 +23,9 @@ spec:
         - name: zeppelin
           image: {{ .Values.zeppelin.image }}
           imagePullPolicy: {{ .Values.zeppelin.imagePullPolicy }}
+          volumeMounts:
+          - name: hdfs-k8s-config
+            mountPath: {{ .Values.hdfsK8s.configPath }}
           ports:
             - containerPort: 8080
               name: web
@@ -32,7 +35,7 @@ spec:
             - name: SPARK_HOME
               value: "/opt/spark"
             - name: HADOOP_CONF_DIR
-              value: "/etc/hdfs-locality/conf"
+              value: {{ .Values.hdfsK8s.configPath }}
 #            - name: ZEPPELIN_JAVA_OPTS
 #              value: >-
 #                -Dspark.driver.memory={{ .Values.spark.driverMemory }}
