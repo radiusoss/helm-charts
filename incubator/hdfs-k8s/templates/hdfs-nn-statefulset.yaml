@@ -3,7 +3,7 @@ kind: StatefulSet
 metadata:
   name: {{ template "hdfs-k8s.fullname" . }}-hdfs-nn
   annotations:
-    checksum/config: {{ include (print $.Template.BasePath "/hdfs-k8s-configmap.yaml") . | sha256sum }}
+    checksum/config: {{ include (print $.Template.BasePath "/hdfs-k8s-nn-configmap.yaml") . | sha256sum }}
   labels:
     app: {{ template "hdfs-k8s.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
@@ -44,7 +44,7 @@ spec:
       terminationGracePeriodSeconds: 0
       containers:
       - name: hdfs-nn
-        image: {{ .Values.image }}
+        image: {{ .Values.hdfs.nameNode.image }}
         imagePullPolicy: {{ .Values.imagePullPolicy }}
         command:
         - "/bin/bash"
@@ -72,7 +72,7 @@ spec:
       volumes:
       - name: hdfs-k8s-config
         configMap:
-          name: {{ template "hdfs-k8s.fullname" . }}
+          name: {{ template "hdfs-k8s.fullname" . }}-hdfs-nn
       - name: dfs
       {{- if .Values.persistence.nameNode.enabled }}
         persistentVolumeClaim:
