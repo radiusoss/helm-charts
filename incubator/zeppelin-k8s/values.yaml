@@ -6,7 +6,7 @@ zeppelin:
       memory: "4096Mi"
       cpu: "2000m"
 hdfsK8s:
-  useConfigMap: false
+  useConfigMap: true
   configMapName: hdfs-k8s-hdfs-k8s-hdfs-dn
   configPath: /etc/hdfs-k8s/conf
 spark:
