@@ -1,12 +1,12 @@
 apiVersion: v1
 description: Web-based notebook that enables data-driven, interactive data analytics and collaborative documents.
-name: zeppelin-k8s
+name: spitfire-k8s
 version: 1.0.0
 appVersion: 0.7.3
-home: https://zeppelin.apache.org
+home: https://datalayer.io
 sources:
-- https://github.com/apache/zeppelin
-icon: https://zeppelin.apache.org/assets/themes/zeppelin/img/zeppelin_classic_logo.png
+- https://github.com/datalayer-contrib/spitfire-k8s
+icon: http://datalayer.io/img/logo-datalayer-horizontal.png
 maintainers:
 - name: eric
   email: eric@datalayer.io

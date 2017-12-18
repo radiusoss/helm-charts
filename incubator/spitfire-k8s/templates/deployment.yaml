@@ -1,9 +1,9 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}-zeppelin
+  name: {{ .Release.Name }}-spitfire
   labels:
-    app: {{ template "zeppelin.name" . }}
+    app: {{ template "spitfire.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -15,14 +15,14 @@ spec:
   template:
     metadata:
       labels:
-        app: {{ template "zeppelin.name" . }}
+        app: {{ template "spitfire.name" . }}
         release: {{ .Release.Name }}
     spec:
       terminationGracePeriodSeconds: 0
       containers:
-        - name: zeppelin
-          image: {{ .Values.zeppelin.image }}
-          imagePullPolicy: {{ .Values.zeppelin.imagePullPolicy }}
+        - name: spitfire
+          image: {{ .Values.spitfire.image }}
+          imagePullPolicy: {{ .Values.spitfire.imagePullPolicy }}
           ports:
             - containerPort: 8080
               name: web
@@ -51,7 +51,7 @@ spec:
               name: hdfs-k8s-config
 {{- end }}
           resources:
-{{ toYaml .Values.zeppelin.resources | indent 12 }} 
+{{ toYaml .Values.spitfire.resources | indent 12 }} 
           readinessProbe:
             httpGet:
               path: /
@@ -59,7 +59,7 @@ spec:
             initialDelaySeconds: 20
             timeoutSeconds: 1
 {{- if .Values.hdfsK8s.useConfigMap }}
-        - name: zeppelin-sidecar
+        - name: spitfire-sidecar
           image: gcr.io/google_containers/kubectl:v0.18.0-120-gaeb4ac55ad12b1-dirty
           imagePullPolicy: IfNotPresent
           args: ["proxy", "-p", "8001"]

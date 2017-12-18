@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Release.Name }}-zeppelin
+  name: {{ .Release.Name }}-spitfire
   labels:
-    app: {{ template "zeppelin.name" . }}
+    app: {{ template "spitfire.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -13,5 +13,5 @@ spec:
   - port: 8080
     name: web
   selector:
-    app: {{ template "zeppelin.name" . }}
+    app: {{ template "spitfire.name" . }}
     release: {{ .Release.Name }}
