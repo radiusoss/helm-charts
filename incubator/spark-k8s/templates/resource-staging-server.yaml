@@ -24,6 +24,9 @@ spec:
   template:
     metadata:
       labels:
+        app: spark-k8s-resource-staging-server
+        kuber: spark-k8s
+        chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
         spark-k8s-resource-staging-server-instance: default
     spec:
       volumes:
