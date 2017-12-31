@@ -3,7 +3,7 @@ kind: StatefulSet
 metadata:
   name: {{ template "hdfs-k8s.fullname" . }}-hdfs-nn
   annotations:
-    checksum/config: {{ include (print $.Template.BasePath "/hdfs-k8s-nn-configmap.yaml") . | sha256sum }}
+    checksum/config: {{ include (print $.Template.BasePath "/hdfs-nn-configmap.yaml") . | sha256sum }}
   labels:
     app: {{ template "hdfs-k8s.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}

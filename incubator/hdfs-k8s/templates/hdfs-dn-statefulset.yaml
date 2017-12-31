@@ -3,7 +3,7 @@ kind: StatefulSet
 metadata:
   name: {{ template "hdfs-k8s.fullname" . }}-hdfs-dn
   annotations:
-    checksum/config: {{ include (print $.Template.BasePath "/hdfs-k8s-dn-configmap.yaml") . | sha256sum }}
+    checksum/config: {{ include (print $.Template.BasePath "/hdfs-dn-configmap.yaml") . | sha256sum }}
   labels:
     app: {{ template "hdfs-k8s.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
@@ -73,10 +73,32 @@ spec:
       - name: hdfs-k8s-config
         configMap:
           name: {{ template "hdfs-k8s.fullname" . }}-hdfs-dn
+      {{- if eq .Values.persistence.dataNode.enabled false}}
       - name: dfs
-      {{- if .Values.persistence.dataNode.enabled }}
-        persistentVolumeClaim:
-          claimName: {{ template "hdfs-k8s.fullname" . }}-hdfs-dn
-      {{- else }}        
         emptyDir: {}
       {{- end }}
+{{- if .Values.persistence.dataNode.enabled}}
+  volumeClaimTemplates:
+  - metadata:
+      name: dfs
+      labels:
+        app: {{ template "hdfs-k8s.name" . }}
+        chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+        release: {{ .Release.Name }}
+        heritage: {{ .Release.Service }}
+        component: hdfs-dn
+    spec:
+      accessModes:
+        - {{ .Values.persistence.dataNode.accessMode | quote }}
+      resources:
+        requests:
+          # upstream recommended max is 700M
+          storage: {{ .Values.persistence.dataNode.size | quote }}
+    {{- if .Values.persistence.dataNode.storageClass }}
+    {{- if (eq "-" .Values.persistence.dataNode.storageClass) }}
+      storageClassName: ""
+    {{- else }}
+      storageClassName: "{{ .Values.persistence.dataNode.storageClass }}"
+    {{- end }}
+    {{- end }}
+{{- end -}}
