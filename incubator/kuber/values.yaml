@@ -1,0 +1,21 @@
+kuber:
+  image: datalayer/kuber:latest
+  imagePullPolicy: IfNotPresent
+  resources:
+    limits:
+      memory: "4096Mi"
+      cpu: "2000m"
+  plane: http://localhost:4326
+  rest: http://localhost:4326
+  ws: ws://localhost:9091
+  insecureBindAddress: 0.0.0.0
+azure:
+  applicationId: f145fb87-901d-4519-ad39-573c30770e6f
+  redirect: http://localhost:4326
+  scope: User.ReadBasic.All+Contacts.Read+Mail.Send+Files.ReadWrite+Notes.ReadWrite
+hdfs: http://localhost:50070
+spitfire:
+  rest: http://localhost:8091
+  ws: ws://localhost:8091
+twitter:
+  redirect": http://datalayer-001:8081/twitter/maketoken

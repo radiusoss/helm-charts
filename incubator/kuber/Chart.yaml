@@ -1,11 +1,11 @@
 apiVersion: v1
 description: Web-based notebook that enables data-driven, interactive data analytics and collaborative documents.
-name: spitfire
+name: kuber
 version: 1.0.0
 appVersion: 0.7.3
 home: https://datalayer.io
 sources:
-- https://github.com/datalayer-contrib/zeppelin-k8s
+- https://github.com/datalayer/kuber
 icon: http://datalayer.io/img/logo-datalayer-horizontal.png
 maintainers:
 - name: eric

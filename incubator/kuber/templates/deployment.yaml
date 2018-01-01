@@ -1,0 +1,61 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-kuber
+  labels:
+    app: {{ template "kuber.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  strategy:
+    rollingUpdate:
+      maxUnavailable: 0
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: {{ template "kuber.name" . }}
+        release: {{ .Release.Name }}
+    spec:
+      terminationGracePeriodSeconds: 0
+      containers:
+        - name: kuber
+          image: {{ .Values.kuber.image }}
+          imagePullPolicy: {{ .Values.kuber.imagePullPolicy }}
+          ports:
+            - containerPort: 9091
+              name: web
+          env:
+            - name: APISERVER_HOST
+              value: ""
+            - name: AZURE_APPLICATION_ID
+              value: "{{ .Values.azure.applicationId }}"
+            - name: AZURE_REDIRECT
+              value: "{{ .Values.azure.redirect }}"
+            - name: AZURE_SCOPE
+              value: "{{ .Values.azure.scppe }}"
+            - name: HDFS
+              value: "{{ .Values.hdfs }}"
+            - name: KUBER_INSECURE_BIND_ADDRESS
+              value: "{{ .Values.kuber.insecureBindAddress }}"
+            - name: KUBER_PLANE
+              value: "{{ .Values.kuber.plane }}"
+            - name: KUBER_REST
+              value: "{{ .Values.kuber.rest }}"
+            - name: KUBER_WS
+              value: "{{ .Values.kuber.ws }}"
+            - name: SPITFIRE_REST
+              value: "{{ .Values.spitfire.rest }}"
+            - name: SPITFIRE_WS
+              value: "{{ .Values.spitfire.ws }}"
+            - name: TWITTER_REDIRECT
+              value: "{{ .Values.twitter.redirect }}"
+          resources:
+{{ toYaml .Values.kuber.resources | indent 12 }} 
+#          readinessProbe:
+#            httpGet:
+#              path: /
+#              port: 9091
+#            initialDelaySeconds: 10
+#            timeoutSeconds: 1
