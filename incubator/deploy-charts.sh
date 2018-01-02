@@ -17,7 +17,7 @@
 # specific language governing permissions and limitations
 # under the License.
 
-function step_1() {
+function hdfs_spark() {
 
 #  helm install -n heapster \
 #    --namespace kube-system \
@@ -44,6 +44,10 @@ function step_1() {
   helm install spark-k8s \
     -n spark-k8s
 
+}
+
+function spitfire() {
+
   helm install \
     spitfire \
     -n spitfire
@@ -54,11 +58,13 @@ kind: Service
 metadata:
   name: spitfire-lb
   annotations:
-    service.beta.kubernetes.io/aws-load-balancer-backend-protocol: tcp
+    service.beta.kubernetes.io/aws-load-balancer-ssl-ports: 443
+    service.beta.kubernetes.io/aws-load-balancer-connection-idle-timeout: 3600
+    service.beta.kubernetes.io/aws-load-balancer-ssl-cert: "arn:aws:acm:us-west-2:345579675507:certificate/9611ac0f-6d9c-4e2e-a4e4-0ec25f8d2156"
 spec:
   type: LoadBalancer
   ports:
-  - port: 80
+  - port: 443
     targetPort: 8080
   selector:
     app: spitfire
@@ -84,11 +90,7 @@ echo """
 
 }
 
-function step_2() {
-
-POD_NAMESPACE=default
-POD_NAME=$(kubectl get pods -n $POD_NAMESPACE -l app=nginx-ingress -o jsonpath={.items[0].metadata.name})
-kubectl describe pod $POD_NAME
+function kuber_plane() {
 
   echo "
   
@@ -98,12 +100,14 @@ kubectl describe pod $POD_NAME
 "
   kubectl describe services spitfire-lb
   echo
+  kubectl describe services spitfire-lb | grep Ingress
+  echo
   echo "Please enter the hostname created for the spitfire-lb:"
   read SPITFIRE_LB_HOSTNAME
   echo
   echo "You entered: $SPITFIRE_LB_HOSTNAME"
   echo
-  echo "We will now deploy the Kuber chart..."
+  echo "We will now deploy Kuber Plane..."
   echo
 
   helm install \
@@ -115,8 +119,8 @@ kubectl describe pod $POD_NAME
     --set kuber.plane="" \
     --set kuber.rest="" \
     --set kuber.ws="" \
-    --set spitfire.rest="http://$SPITFIRE_LB_HOSTNAME" \
-    --set spitfire.ws="ws://$SPITFIRE_LB_HOSTNAME" \
+    --set spitfire.rest="https://$SPITFIRE_LB_HOSTNAME" \
+    --set spitfire.ws="wss://$SPITFIRE_LB_HOSTNAME" \
     --set twitter.redirect="" \
     kuber-plane \
     -n kuber-plane
@@ -125,12 +129,11 @@ kubectl describe pod $POD_NAME
 apiVersion: v1
 kind: Service
 metadata:
-  name: kuber-plane-web
+  name: kuber-plane-lb
   annotations:
     service.beta.kubernetes.io/aws-load-balancer-ssl-ports: 443
-    service.beta.kubernetes.io/aws-load-balancer-backend-protocol: ssl
     service.beta.kubernetes.io/aws-load-balancer-connection-idle-timeout: 3600
-    service.beta.kubernetes.io/aws-load-balancer-ssl-cert: "arn:aws:acm:us-west-2:345579675507:certificate/9611ac0f-6d9c-4e2e-a4e4-0ec25f8d2156"
+    service.beta.kubernetes.io/aws-load-balancer-ssl-cert: "arn:aws:acm:us-west-2:345579675507:certificate/1990dfba-a81d-469a-8c16-df21a408aa49"
 spec:
   type: LoadBalancer
   ports:
@@ -152,14 +155,16 @@ EOF
 
 # Check the LoadBalancer Ingress value for \`kuber-lb\` (rerun in a few minutes if no hostname is shown)
 
-   kubectl describe services kuber-https | grep Ingress
+   kubectl describe services kuber-plane-lb | grep Ingress
 "
-  kubectl describe services kuber-https
+  kubectl describe services kuber-plane-lb
+  echo
+  kubectl describe services kuber-plane-lb | grep Ingress
   echo
 
 }
 
-function step_3() {
+function ingress() {
   
   cat << EOF | kubectl create -f -
 apiVersion: extensions/v1beta1
@@ -199,6 +204,7 @@ EOF
 
 }
 
-step_1
-step_2
-# step_3
+# hdfs_spark
+# spitfire
+kuber_plane
+# inngress
