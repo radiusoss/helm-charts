@@ -34,7 +34,7 @@ spec:
             - name: AZURE_REDIRECT
               value: "{{ .Values.azure.redirect }}"
             - name: AZURE_SCOPE
-              value: "{{ .Values.azure.scppe }}"
+              value: "{{ .Values.azure.scope }}"
             - name: HDFS
               value: "{{ .Values.hdfs }}"
             - name: KUBER_INSECURE_BIND_ADDRESS
@@ -53,9 +53,9 @@ spec:
               value: "{{ .Values.twitter.redirect }}"
           resources:
 {{ toYaml .Values.kuber.resources | indent 12 }} 
-#          readinessProbe:
-#            httpGet:
-#              path: /
-#              port: 9091
-#            initialDelaySeconds: 10
-#            timeoutSeconds: 1
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 9091
+            initialDelaySeconds: 10
+            timeoutSeconds: 1
