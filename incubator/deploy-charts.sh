@@ -49,6 +49,7 @@ function hdfs_spark() {
 function spitfire() {
 
   helm install \
+    --set spitfire.imagePullPolicy=Always \
     spitfire \
     -n spitfire
 
@@ -111,16 +112,20 @@ function kuber_plane() {
   echo
 
   helm install \
-    --set azure.applicationId="f7194ac8-ff71-47f6-839c-e3b20f247ebc" \
-    --set azure.redirect="" \
-    --set azure.scope="User.ReadBasic.All+Contacts.Read+Mail.Send+Files.ReadWrite+Notes.ReadWrite" \
+    --set kuber.imagePullPolicy=Always \
     --set hdfs="" \
     --set kuber.insecureBindAddress="0.0.0.0" \
     --set kuber.plane="" \
     --set kuber.rest="" \
     --set kuber.ws="" \
+    --set microsoft.applicationId="f7194ac8-ff71-47f6-839c-e3b20f247ebc" \
+    --set microsoft.applicationSecret="seuLJSMO4$ueukZU4578)}@" \
+    --set microsoft.redirect="" \
+    --set microsoft.scope="User.ReadBasic.All" \
     --set spitfire.rest="https://$SPITFIRE_LB_HOSTNAME" \
     --set spitfire.ws="wss://$SPITFIRE_LB_HOSTNAME" \
+    --set twitter.consumerKey="Fsy5JzXec7wY5mPPsEdsNkAe4" \
+    --set twitter.consumerSecret="q0suooaCz17lkiHZZi35OoXfBJrAPRyUBi0AssEppP9YXxBSRz" \
     --set twitter.redirect="" \
     kuber-plane \
     -n kuber-plane

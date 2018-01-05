@@ -26,6 +26,8 @@ spec:
           ports:
             - containerPort: 8080
               name: web
+            - containerPort: 4040
+              name: spark-ui
           env:
             - name: ZEPPELIN_PORT
               value: "8080"

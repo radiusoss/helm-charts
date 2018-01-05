@@ -12,6 +12,8 @@ spec:
   ports:
   - port: 8080
     name: spitfire-web
+  - port: 4040
+    name: spitfire-spark-ui
   selector:
     app: {{ template "spitfire.name" . }}
     release: {{ .Release.Name }}

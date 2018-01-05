@@ -29,12 +29,6 @@ spec:
           env:
             - name: APISERVER_HOST
               value: ""
-            - name: AZURE_APPLICATION_ID
-              value: "{{ .Values.azure.applicationId }}"
-            - name: AZURE_REDIRECT
-              value: "{{ .Values.azure.redirect }}"
-            - name: AZURE_SCOPE
-              value: "{{ .Values.azure.scope }}"
             - name: HDFS
               value: "{{ .Values.hdfs }}"
             - name: KUBER_INSECURE_BIND_ADDRESS
@@ -45,10 +39,22 @@ spec:
               value: "{{ .Values.kuber.rest }}"
             - name: KUBER_WS
               value: "{{ .Values.kuber.ws }}"
+            - name: MICROSOFT_APPLICATION_ID
+              value: "{{ .Values.microsoft.applicationId }}"
+            - name: MICROSOFT_APPLICATION_SECRET
+              value: "{{ .Values.microsoft.applicationSecret }}"
+            - name: MICROSOFT_REDIRECT
+              value: "{{ .Values.microsoft.redirect }}"
+            - name: MICROSOFT_SCOPE
+              value: "{{ .Values.microsoft.scope }}"
             - name: SPITFIRE_REST
               value: "{{ .Values.spitfire.rest }}"
             - name: SPITFIRE_WS
               value: "{{ .Values.spitfire.ws }}"
+            - name: TWITTER_CONSUMER_KEY
+              value: "{{ .Values.twitter.consumerKey }}"
+            - name: TWITTER_CONSUMER_SECRET
+              value: "{{ .Values.twitter.consumerSecret }}"
             - name: TWITTER_REDIRECT
               value: "{{ .Values.twitter.redirect }}"
           resources:
