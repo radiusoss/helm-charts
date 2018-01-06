@@ -41,10 +41,10 @@ spec:
               value: "{{ .Values.kuber.ws }}"
             - name: MICROSOFT_APPLICATION_ID
               value: "{{ .Values.microsoft.applicationId }}"
-            - name: MICROSOFT_APPLICATION_SECRET
-              value: "{{ .Values.microsoft.applicationSecret }}"
             - name: MICROSOFT_REDIRECT
               value: "{{ .Values.microsoft.redirect }}"
+            - name: MICROSOFT_SECRET
+              value: "{{ .Values.microsoft.secret }}"
             - name: MICROSOFT_SCOPE
               value: "{{ .Values.microsoft.scope }}"
             - name: SPITFIRE_REST
@@ -65,3 +65,7 @@ spec:
               port: 9091
             initialDelaySeconds: 10
             timeoutSeconds: 1
+        - name: kuber-sidecar
+          image: datalayer/k8s-sidecar:v1.8.2
+          imagePullPolicy: IfNotPresent
+          args: ["proxy", "-p", "8001"]

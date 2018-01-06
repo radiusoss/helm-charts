@@ -11,8 +11,8 @@ kuber:
       cpu: "2000m"
 microsoft:
   applicationId: ""
-  applicationSecret: ""
   redirect: http://localhost:4326
+  secret: ""
   scope: User.ReadBasic.All+Contacts.Read+Mail.Send+Files.ReadWrite+Notes.ReadWrite
 hdfs: http://localhost:50070
 spitfire:
