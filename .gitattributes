@@ -2,3 +2,4 @@
 *.css linguist-vendored=true 
 *.sh linguist-vendored=true
 *.html linguist-vendored=true
+*.tpl linguist-vendored=true
