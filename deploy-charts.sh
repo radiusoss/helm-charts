@@ -120,7 +120,7 @@ function kuber_plane() {
     --set kuber.ws="" \
     --set microsoft.applicationId="f7194ac8-ff71-47f6-839c-e3b20f247ebc" \
     --set microsoft.redirect="" \
-    --set microsoft.secret="seuLJSMO4$ueukZU4578)}@" \
+    --set microsoft.secret="seuLJSMO4\$ueukZU4578)}@" \
     --set microsoft.scope="User.ReadBasic.All" \
     --set spitfire.rest="https://$SPITFIRE_LB_HOSTNAME" \
     --set spitfire.ws="wss://$SPITFIRE_LB_HOSTNAME" \
