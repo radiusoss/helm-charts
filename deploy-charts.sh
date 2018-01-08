@@ -33,6 +33,7 @@ function hdfs_spark() {
 #    -n kuber-etcd
 
   helm install \
+    --set imagePullPolicy=Always \
     --set persistence.nameNode.enabled=true \
     --set persistence.nameNode.storageClass=gp2 \
     --set persistence.dataNode.enabled=true \
@@ -42,6 +43,7 @@ function hdfs_spark() {
     -n hdfs-k8s
 
   helm install spark-k8s \
+    --set spark.imagePullPolicy=Always \
     -n spark-k8s
 
 }
@@ -61,7 +63,7 @@ metadata:
   annotations:
     service.beta.kubernetes.io/aws-load-balancer-ssl-ports: 443
     service.beta.kubernetes.io/aws-load-balancer-connection-idle-timeout: 3600
-    service.beta.kubernetes.io/aws-load-balancer-ssl-cert: "arn:aws:acm:us-west-2:345579675507:certificate/9611ac0f-6d9c-4e2e-a4e4-0ec25f8d2156"
+    service.beta.kubernetes.io/aws-load-balancer-ssl-cert: "arn:aws:acm:us-west-2:345579675507:certificate/5532d37a-d81a-471a-a220-89aac40c3319"
 spec:
   type: LoadBalancer
   ports:
@@ -138,7 +140,7 @@ metadata:
   annotations:
     service.beta.kubernetes.io/aws-load-balancer-ssl-ports: 443
     service.beta.kubernetes.io/aws-load-balancer-connection-idle-timeout: 3600
-    service.beta.kubernetes.io/aws-load-balancer-ssl-cert: "arn:aws:acm:us-west-2:345579675507:certificate/1990dfba-a81d-469a-8c16-df21a408aa49"
+    service.beta.kubernetes.io/aws-load-balancer-ssl-cert: "arn:aws:acm:us-west-2:345579675507:certificate/ce5a63ee-e9e0-472b-a5d6-a28303fe1d6a"
 spec:
   type: LoadBalancer
   ports:
@@ -209,7 +211,7 @@ EOF
 
 }
 
-# hdfs_spark
-# spitfire
+hdfs_spark
+spitfire
 kuber_plane
-# inngress
+# ingress

@@ -1,10 +1,10 @@
 spark:
   image: datalayer/spark-k8s:2.2.0-0.5.0
+  imagePullPolicy: IfNotPresent
   resources:
     limits:
       memory: "4096Mi"
       cpu: "2000m"
-spark:
   driverMemory: 1g
   executorMemory: 1g
   numExecutors: 2

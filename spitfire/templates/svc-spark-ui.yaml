@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Release.Name }}-spitfire
+  name: {{ .Release.Name }}-spitfire-spark-ui
   labels:
     app: {{ template "spitfire.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
@@ -10,8 +10,8 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-  - port: 8080
-    name: spitfire-web
+  - port: 4040
+    name: spitfire-spark-ui
   selector:
     app: {{ template "spitfire.name" . }}
     release: {{ .Release.Name }}

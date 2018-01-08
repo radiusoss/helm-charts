@@ -36,7 +36,7 @@ spec:
       containers:
         - name: spark-k8s-resource-staging-server
           image: datalayer/spark-k8s-resource-staging-server:2.2.0-0.5.0
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: {{ .Values.spark.imagePullPolicy }}
           resources:
             requests:
               cpu: 100m
