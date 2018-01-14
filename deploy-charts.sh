@@ -17,21 +17,30 @@
 # specific language governing permissions and limitations
 # under the License.
 
-function hdfs_spark() {
-
+function heapster() {
 #  helm install -n heapster \
 #    --namespace kube-system \
 #    stable/heapster
+  echo "Heapster disabled..."
 
+}
+
+function dashboard() {
 #  helm install k8s-dashboard \
 #    --namespace kube-system \
 #    --set=httpPort=3000,resources.limits.cpu=200m,rbac.create=true \
 #    -n k8s-dashboard
+  echo "Dashboard disabled..."
+}
 
+function etcd() {
 #  helm install etcd \
 #    --set StorageClass=gp2 \
 #    -n kuber-etcd
+  echo "Etcd disabled..."
+}
 
+function hdfs() {
   helm install \
     --set imagePullPolicy=Always \
     --set persistence.nameNode.enabled=true \
@@ -41,11 +50,12 @@ function hdfs_spark() {
     --set hdfs.dataNode.replicas=3 \
     hdfs-k8s \
     -n hdfs-k8s
+}
 
+function spark() {
   helm install spark-k8s \
     --set spark.imagePullPolicy=Always \
     -n spark-k8s
-
 }
 
 function spitfire() {
@@ -62,13 +72,27 @@ metadata:
   name: spitfire-lb
   annotations:
     service.beta.kubernetes.io/aws-load-balancer-ssl-ports: 443
-    service.beta.kubernetes.io/aws-load-balancer-connection-idle-timeout: 3600
-    service.beta.kubernetes.io/aws-load-balancer-ssl-cert: "arn:aws:acm:us-west-2:345579675507:certificate/5532d37a-d81a-471a-a220-89aac40c3319"
 spec:
   type: LoadBalancer
   ports:
-  - port: 443
+  - port: 80
     targetPort: 8080
+  selector:
+    app: spitfire
+EOF
+
+  cat << EOF | kubectl apply -f -
+apiVersion: v1
+kind: Service
+metadata:
+  name: spitfire-spark-ui-lb
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-ssl-ports: 443
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+    targetPort: 4040
   selector:
     app: spitfire
 EOF
@@ -138,13 +162,11 @@ kind: Service
 metadata:
   name: kuber-plane-lb
   annotations:
-    service.beta.kubernetes.io/aws-load-balancer-ssl-ports: 443
     service.beta.kubernetes.io/aws-load-balancer-connection-idle-timeout: 3600
-    service.beta.kubernetes.io/aws-load-balancer-ssl-cert: "arn:aws:acm:us-west-2:345579675507:certificate/ce5a63ee-e9e0-472b-a5d6-a28303fe1d6a"
 spec:
   type: LoadBalancer
   ports:
-  - port: 443
+  - port: 80
     targetPort: 9091
   selector:
     app: kuber-plane
@@ -211,7 +233,11 @@ EOF
 
 }
 
-hdfs_spark
+# heapster
+# dashboard
+# etcd
+# hdfs
+# spark
 spitfire
-kuber_plane
+# kuber_plane
 # ingress

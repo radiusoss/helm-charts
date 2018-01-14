@@ -1,5 +1,5 @@
 spitfire:
-  image: datalayer/spitfire:latest
+  image: datalayer/spitfire:0.0.1
   imagePullPolicy: IfNotPresent
   resources:
     limits:
