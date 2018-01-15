@@ -17,10 +17,9 @@
 # specific language governing permissions and limitations
 # under the License.
 
-
 for d in */ ; do
-  helm package "$d"
+  helm package "$d" .
 done
 
-helm serve --repo-path .
+nohup helm serve --address 0.0.0.0:80 --repo-path . &
 
