@@ -18,26 +18,22 @@
 # under the License.
 
 function heapster() {
-#  helm install -n heapster \
-#    --namespace kube-system \
-#    stable/heapster
-  echo "Heapster disabled..."
-
+  helm install -n heapster \
+    --namespace kube-system \
+    stable/heapster
 }
 
 function dashboard() {
-#  helm install k8s-dashboard \
-#    --namespace kube-system \
-#    --set=httpPort=3000,resources.limits.cpu=200m,rbac.create=true \
-#    -n k8s-dashboard
-  echo "Dashboard disabled..."
+  helm install k8s-dashboard \
+    --namespace kube-system \
+    --set=httpPort=3000,resources.limits.cpu=200m,rbac.create=true \
+    -n k8s-dashboard
 }
 
 function etcd() {
-#  helm install etcd \
-#    --set StorageClass=gp2 \
-#    -n kuber-etcd
-  echo "Etcd disabled..."
+  helm install etcd \
+    --set StorageClass=gp2 \
+    -n kuber-etcd
 }
 
 function hdfs() {
@@ -62,6 +58,7 @@ function spitfire() {
 
   helm install \
     --set spitfire.imagePullPolicy=Always \
+    --set spitfire.notebookRepo=https://github.com/datalayer/notebook-init.git \
     spitfire \
     -n spitfire
 
@@ -110,7 +107,7 @@ echo """
 
   http://localhost:8001/api/v1/namespaces/kube-system/services/http:k8s-dashboard-kubernetes-dashboard:/proxy/#!/overview?namespace=_all
 
-# Browse Apache Zeppelin
+# Browse Spitfire
 
   http://localhost:8001/api/v1/namespaces/default/services/http:spitfire-spitfire:8080/proxy
 "

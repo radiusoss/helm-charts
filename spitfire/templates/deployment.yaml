@@ -35,6 +35,10 @@ spec:
               value: "/opt/spark"
             - name: HADOOP_CONF_DIR
               value: "/etc/hdfs-k8s/conf"
+            - name: ZEPPELIN_CONF_DIR
+              value: /opt/spitfire/notebook/_lib
+            - name: SPITFIRE_NOTEBOOK_REPO
+              value: {{ .Values.spitfire.notebookRepo }}
 #            - name: ZEPPELIN_JAVA_OPTS
 #              value: >-
 #                -Dspark.driver.memory={{ .Values.spark.driverMemory }}
