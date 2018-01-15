@@ -1,4 +1,4 @@
-name: kubernetes-dashboard
+name: k8s-dashboard
 version: 0.0.1
 appVersion: 1.7.1
 description: General-purpose web UI for Kubernetes clusters
