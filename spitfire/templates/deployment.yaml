@@ -36,7 +36,7 @@ spec:
             - name: HADOOP_CONF_DIR
               value: "/etc/hdfs-k8s/conf"
             - name: ZEPPELIN_CONF_DIR
-              value: /opt/spitfire/notebook/_lib
+              value: /opt/spitfire/notebook/_conf
             - name: SPITFIRE_NOTEBOOK_REPO
               value: {{ .Values.spitfire.notebookRepo }}
 #            - name: ZEPPELIN_JAVA_OPTS
