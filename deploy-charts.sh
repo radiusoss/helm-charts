@@ -67,8 +67,6 @@ apiVersion: v1
 kind: Service
 metadata:
   name: spitfire-lb
-  annotations:
-    service.beta.kubernetes.io/aws-load-balancer-ssl-ports: 443
 spec:
   type: LoadBalancer
   ports:
@@ -83,8 +81,6 @@ apiVersion: v1
 kind: Service
 metadata:
   name: spitfire-spark-ui-lb
-  annotations:
-    service.beta.kubernetes.io/aws-load-balancer-ssl-ports: 443
 spec:
   type: LoadBalancer
   ports:
@@ -230,11 +226,41 @@ EOF
 
 }
 
+
+function options() {
+  echo "Valid options are: spitfire | hdfs | spark | spitfire | kuber_plane" 1>&2    
+}
+
+CMD="$1"
+if [ -z "$CMD" ]; then
+  echo "No command to execute has been provided." 1>&2  
+  options
+  exit 1
+fi
+
 # heapster
 # dashboard
 # etcd
-# hdfs
-# spark
-spitfire
 # kuber_plane
 # ingress
+
+case "$CMD" in
+
+  hdfs)
+    hdfs
+    ;;
+
+  spark)
+    spark
+    ;;
+
+  spitfire)
+    spitfire
+    ;;
+
+  *)
+    echo "Unknown command: $CMD" 1>&2
+    options
+    exit 1
+
+esac
