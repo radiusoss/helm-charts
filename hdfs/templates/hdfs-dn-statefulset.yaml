@@ -46,6 +46,9 @@ spec:
       - name: hdfs-dn
         image: {{ .Values.hdfs.dataNode.image }}
         imagePullPolicy: {{ .Values.imagePullPolicy }}
+        env:
+          - name: HDFS_CLUSTER_ID
+            value: {{ template "hdfs.fullname" . }}-cid
         command:
            - "/bin/bash"
            - "/tmp/hdfs-config/bootstrap.sh"
