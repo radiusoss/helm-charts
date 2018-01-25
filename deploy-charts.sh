@@ -228,7 +228,7 @@ EOF
 
 
 function options() {
-  echo "Valid options are: spitfire | hdfs | spark | spitfire | kuber_plane" 1>&2    
+  echo "Valid options are: heapster | dashboard | etcd | spitfire | hdfs | spark | spitfire | kuber_plane | ingress" 1>&2    
 }
 
 CMD="$1"
@@ -238,13 +238,19 @@ if [ -z "$CMD" ]; then
   exit 1
 fi
 
-# heapster
-# dashboard
-# etcd
-# kuber_plane
-# ingress
-
 case "$CMD" in
+
+  heapster)
+    heapster
+    ;;
+
+  dashboard)
+    dashboard
+    ;;
+
+  etcd)
+    etcd
+    ;;
 
   hdfs)
     hdfs
@@ -256,6 +262,10 @@ case "$CMD" in
 
   spitfire)
     spitfire
+    ;;
+
+  ingress)
+    ingress
     ;;
 
   *)
