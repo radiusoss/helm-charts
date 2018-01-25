@@ -22,4 +22,3 @@ for d in */ ; do
 done
 
 nohup helm serve --address 0.0.0.0:80 --repo-path . &
-

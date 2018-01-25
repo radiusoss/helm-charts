@@ -18,23 +18,23 @@
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
-  name: spark-k8s-resource-staging-server
+  name: spark-resource-staging-server
 spec:
   replicas: 1
   template:
     metadata:
       labels:
-        app: spark-k8s-resource-staging-server
-        kuber: spark-k8s
+        app: spark-resource-staging-server
+        kuber: spark
         chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
-        spark-k8s-resource-staging-server-instance: default
+        spark-resource-staging-server-instance: default
     spec:
       volumes:
-        - name: spark-k8s-resource-staging-server-config
+        - name: spark-resource-staging-server-config
           configMap:
-            name: spark-k8s-resource-staging-server-config
+            name: spark-resource-staging-server-config
       containers:
-        - name: spark-k8s-resource-staging-server
+        - name: spark-resource-staging-server
           image: datalayer/spark-k8s-resource-staging-server:2.2.0
           imagePullPolicy: {{ .Values.spark.imagePullPolicy }}
           resources:
@@ -45,17 +45,17 @@ spec:
               cpu: 100m
               memory: 1Gi
           volumeMounts:
-            - name: spark-k8s-resource-staging-server-config
-              mountPath: '/etc/spark-k8s-resource-staging-server'
+            - name: spark-resource-staging-server-config
+              mountPath: '/etc/spark-resource-staging-server'
           args:
-            - '/etc/spark-k8s-resource-staging-server/spark-k8s-resource-staging-server.properties'
+            - '/etc/spark-resource-staging-server/spark-resource-staging-server.properties'
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: spark-k8s-resource-staging-server-config
+  name: spark-resource-staging-server-config
 data:
-  spark-k8s-resource-staging-server.properties: |
+  spark-resource-staging-server.properties: |
     spark.kubernetes.resourceStagingServer.port=10000
     spark.ssl.kubernetes.resourceStagingServer.enabled=false
 # Other possible properties are listed below, primarily for setting up TLS. The paths given by KeyStore, password, and PEM files here should correspond to
@@ -71,11 +71,11 @@ data:
 apiVersion: v1
 kind: Service
 metadata:
-  name: spark-k8s-resource-staging-service
+  name: spark-resource-staging-service
 spec:
   type: NodePort
   selector:
-    spark-k8s-resource-staging-server-instance: default
+    spark-resource-staging-server-instance: default
   ports:
     - protocol: TCP
       port: 10000

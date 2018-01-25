@@ -44,14 +44,14 @@ function hdfs() {
     --set persistence.dataNode.enabled=true \
     --set persistence.dataNode.storageClass=gp2 \
     --set hdfs.dataNode.replicas=3 \
-    hdfs-k8s \
-    -n hdfs-k8s
+    hdfs \
+    -n hdfs
 }
 
 function spark() {
-  helm install spark-k8s \
+  helm install spark \
     --set spark.imagePullPolicy=Always \
-    -n spark-k8s
+    -n spark
 }
 
 function spitfire() {
@@ -93,7 +93,7 @@ EOF
 echo """
 # Check HDFS
 
-  kubectl exec -it hdfs-k8s-hdfs-k8s-hdfs-nn-0 -- hdfs dfsadmin -report
+  kubectl exec -it hdfs-hdfs-hdfs-nn-0 -- hdfs dfsadmin -report
 
 # Run K8S Proxy
 

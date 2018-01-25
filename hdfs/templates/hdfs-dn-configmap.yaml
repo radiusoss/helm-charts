@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ template "hdfs-k8s.fullname" . }}-hdfs-nn
+  name: {{ template "hdfs.fullname" . }}-hdfs-dn
   labels:
-    app: {{ template "hdfs-k8s.name" . }}
+    app: {{ template "hdfs.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -16,7 +16,7 @@ data:
     . $HADOOP_PREFIX/etc/hadoop/hadoop-env.sh
 
     # Directory to find config artifacts
-    CONFIG_DIR="/tmp/hdfs-k8s-config"
+    CONFIG_DIR="/tmp/hdfs-config"
 
     # Copy config files from volume mount
 
@@ -35,14 +35,14 @@ data:
     if [[ "${HOSTNAME}" =~ "hdfs-nn" ]]; then
       mkdir -p /root/hdfs/namenode
       $HADOOP_PREFIX/bin/hdfs namenode -format -force -nonInteractive
-      sed -i s/{{ template "hdfs-k8s.fullname" . }}-hdfs-nn/0.0.0.0/ /usr/local/hadoop/etc/hadoop/core-site.xml
+      sed -i s/{{ template "hdfs.fullname" . }}-hdfs-nn/0.0.0.0/ /usr/local/hadoop/etc/hadoop/core-site.xml
       $HADOOP_PREFIX/sbin/hadoop-daemon.sh start namenode
     fi
 
     if [[ "${HOSTNAME}" =~ "hdfs-dn" ]]; then
       mkdir -p /root/hdfs/datanode
       #  wait up to 30 seconds for namenode 
-      (while [[ $count -lt 15 && -z `curl -sf http://{{ template "hdfs-k8s.fullname" . }}-hdfs-nn:50070` ]]; do ((count=count+1)) ; echo "Waiting for {{ template "hdfs-k8s.fullname" . }}-hdfs-nn" ; sleep 2; done && [[ $count -lt 15 ]])
+      (while [[ $count -lt 15 && -z `curl -sf http://{{ template "hdfs.fullname" . }}-hdfs-nn:50070` ]]; do ((count=count+1)) ; echo "Waiting for {{ template "hdfs.fullname" . }}-hdfs-nn" ; sleep 2; done && [[ $count -lt 15 ]])
       [[ $? -ne 0 ]] && echo "Timeout waiting for hdfs-nn, exiting." && exit 1
       $HADOOP_PREFIX/sbin/hadoop-daemon.sh start datanode
     fi
@@ -63,7 +63,7 @@ data:
     <configuration>
       <property>
         <name>fs.defaultFS</name>
-        <value>hdfs://{{ template "hdfs-k8s.fullname" . }}-hdfs-nn-0:9000/</value>
+        <value>hdfs://{{ template "hdfs.fullname" . }}-hdfs-nn:9000/</value>
         <description>NameNode URI</description>
       </property>
     </configuration>

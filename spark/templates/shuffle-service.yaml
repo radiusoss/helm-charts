@@ -19,15 +19,15 @@ apiVersion: extensions/v1beta1
 kind: DaemonSet
 metadata:
   labels:
-    app: spark-k8s-shuffle-service
+    app: spark-shuffle-service
     spark-version: 2.2.0
-  name: spark-k8s-shuffle-service
+  name: spark-shuffle-service
 spec:
   template:
     metadata:
       labels:
-        app: spark-k8s-shuffle-service
-        kuber: spark-k8s
+        app: spark-shuffle-service
+        kuber: spark
         chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
         spark-version: 2.2.0
     spec:

@@ -8,8 +8,8 @@ spitfire:
       cpu: "3000m"
 hdfsK8s:
   useConfigMap: true
-  configMapName: hdfs-k8s-hdfs-k8s-hdfs-dn
-  configPath: /etc/hdfs-k8s/conf
+  configMapName: hdfs-hdfs-hdfs-dn
+  configPath: /etc/hdfs/conf
 spark:
   driverMemory: 8g
   executorMemory: 8g

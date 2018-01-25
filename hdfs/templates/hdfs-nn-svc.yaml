@@ -2,22 +2,22 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "hdfs-k8s.fullname" . }}-hdfs-dn
+  name: {{ template "hdfs.fullname" . }}-hdfs-nn
   labels:
-    app: {{ template "hdfs-k8s.name" . }}
+    app: {{ template "hdfs.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
-    component: hdfs-dn
+    component: hdfs-nn
 spec:
   ports:
   - name: dfs
     port: 9000
     protocol: TCP
   - name: webhdfs
-    port: 50075
+    port: 50070
   clusterIP: None
   selector:
-    app: {{ template "hdfs-k8s.name" . }}
+    app: {{ template "hdfs.name" . }}
     release: {{ .Release.Name }}
-    component: hdfs-dn
+    component: hdfs-nn
