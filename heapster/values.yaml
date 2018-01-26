@@ -15,7 +15,7 @@ labels: {}
 ## Ref: https://kubernetes.io/docs/user-guide/node-selection/
 ##
 nodeSelector: {
-  kuber-role: worker
+  kuber-role: master
 }
 
 service:

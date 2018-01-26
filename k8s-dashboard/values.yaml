@@ -8,7 +8,7 @@ imageTag: "v1.7.1"
 imagePullPolicy: "IfNotPresent"
 
 nodeSelector: {
-  kuber-role: worker
+  kuber-role: master
 }
 
 httpPort: 80
