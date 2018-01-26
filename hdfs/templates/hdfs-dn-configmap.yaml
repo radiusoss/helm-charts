@@ -33,8 +33,10 @@ data:
     cd $HADOOP_PREFIX/share/hadoop/common ; for cp in ${ACP//,/ }; do  echo == $cp; curl -LO $cp ; done; cd -
 
     if [[ "${HOSTNAME}" =~ "hdfs-nn" ]]; then
-      mkdir -p /root/hdfs/namenode
-      $HADOOP_PREFIX/bin/hdfs namenode -format -clusterid $HDFS_CLUSTER_ID -force -nonInteractive
+      if [ ! -f /root/hdfs/namenode/current/VERSION ]; then
+        mkdir -p /root/hdfs/namenode
+        $HADOOP_PREFIX/bin/hdfs namenode -format -clusterid $HDFS_CLUSTER_ID -force -nonInteractive
+      fi
       sed -i s/{{ template "hdfs.fullname" . }}-hdfs-nn/0.0.0.0/ /usr/local/hadoop/etc/hadoop/core-site.xml
       $HADOOP_PREFIX/sbin/hadoop-daemon.sh start namenode
     fi
