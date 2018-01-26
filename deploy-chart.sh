@@ -20,7 +20,7 @@
 function heapster() {
   helm install -n heapster \
     --namespace kube-system \
-    stable/heapster
+    heapster
 }
 
 function dashboard() {
