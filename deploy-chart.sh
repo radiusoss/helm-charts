@@ -74,6 +74,7 @@ spec:
     targetPort: 8080
   selector:
     app: spitfire
+    release: spitfire
 EOF
 
   cat << EOF | kubectl apply -f -
@@ -88,6 +89,7 @@ spec:
     targetPort: 4040
   selector:
     app: spitfire
+    release: spitfire
 EOF
 
 echo """
@@ -163,6 +165,7 @@ spec:
     targetPort: 9091
   selector:
     app: kuber-plane
+    release: kuber-plane
 EOF
 
   echo "
