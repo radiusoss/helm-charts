@@ -42,6 +42,8 @@ spec:
                   component: hdfs-dn
         {{- end }}
       terminationGracePeriodSeconds: 0
+      nodeSelector:
+        kuber-role: worker
       containers:
       - name: hdfs-dn
         image: {{ .Values.hdfs.dataNode.image }}

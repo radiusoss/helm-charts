@@ -7,7 +7,9 @@ image: k8s.gcr.io/kubernetes-dashboard-amd64
 imageTag: "v1.7.1"
 imagePullPolicy: "IfNotPresent"
 
-nodeSelector: {}
+nodeSelector: {
+  kuber-role: worker
+}
 
 httpPort: 80
 

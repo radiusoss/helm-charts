@@ -19,6 +19,8 @@ spec:
         release: {{ .Release.Name }}
     spec:
       terminationGracePeriodSeconds: 0
+      nodeSelector:
+        kuber-role: master
       containers:
         - name: kuber
           image: {{ .Values.kuber.image }}

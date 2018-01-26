@@ -19,6 +19,8 @@ spec:
         chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
         component: "{{ .Release.Name }}-{{ .Values.Component }}"
     spec:
+      nodeSelector:
+        kuber-role: worker
       containers:
       - name: {{ template "etcd.fullname" . }}
         image: "{{ .Values.Image }}:{{ .Values.ImageTag }}"

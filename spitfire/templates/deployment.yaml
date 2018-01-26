@@ -19,6 +19,8 @@ spec:
         release: {{ .Release.Name }}
     spec:
       terminationGracePeriodSeconds: 0
+      nodeSelector:
+        kuber-role: worker
       containers:
         - name: spitfire
           image: {{ .Values.spitfire.image }}

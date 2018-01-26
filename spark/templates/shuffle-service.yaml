@@ -35,6 +35,8 @@ spec:
         - name: temp-volume
           hostPath:
             path: '/tmp/spark-local' # change this path according to your cluster configuration.
+      nodeSelector:
+        kuber-role: worker
       containers:
         - name: shuffle
           image: datalayer/spark-k8s-shuffle-service:2.2.0
