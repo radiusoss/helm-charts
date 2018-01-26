@@ -33,8 +33,15 @@ spec:
         - name: spark-resource-staging-server-config
           configMap:
             name: spark-resource-staging-server-config
-      nodeSelector:
-        kuber-role: worker
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: kuber-role
+                operator: NotIn
+                values:
+                - master
       containers:
         - name: spark-resource-staging-server
           image: datalayer/spark-k8s-resource-staging-server:2.2.0

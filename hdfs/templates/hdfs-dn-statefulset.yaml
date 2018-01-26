@@ -42,8 +42,15 @@ spec:
                   component: hdfs-dn
         {{- end }}
       terminationGracePeriodSeconds: 0
-      nodeSelector:
-        kuber-role: worker
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: kuber-role
+                operator: NotIn
+                values:
+                - master
       containers:
       - name: hdfs-dn
         image: {{ .Values.hdfs.dataNode.image }}
