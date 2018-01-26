@@ -23,7 +23,7 @@ function heapster() {
     heapster
 }
 
-function dashboard() {
+function k8s_dashboard() {
   helm install k8s-dashboard \
     --namespace kube-system \
     --set=httpPort=3000,resources.limits.cpu=200m,rbac.create=true \
@@ -231,7 +231,7 @@ EOF
 
 
 function options() {
-  echo "Valid options are: heapster | dashboard | etcd | spitfire | hdfs | spark | spitfire | kuber_plane | ingress" 1>&2    
+  echo "Valid options are: heapster | k8s-dashboard | etcd | spitfire | hdfs | spark | spitfire | kuber-plane | ingress" 1>&2    
 }
 
 CMD="$1"
@@ -247,8 +247,8 @@ case "$CMD" in
     heapster
     ;;
 
-  dashboard)
-    dashboard
+  k8s-dashboard)
+    k8s_dashboard
     ;;
 
   etcd)
@@ -265,6 +265,10 @@ case "$CMD" in
 
   spitfire)
     spitfire
+    ;;
+
+  kuber-plane)
+    kuber-plane
     ;;
 
   ingress)
