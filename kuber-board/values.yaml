@@ -1,7 +1,7 @@
 kuber:
-  image: datalayer/kuber-board:latest
+  image: datalayer/kuber-board:0.0.1
   imagePullPolicy: IfNotPresent
-  plane: http://localhost:4326
+  board: http://localhost:4326
   rest: http://localhost:4326
   ws: ws://localhost:9091
   insecureBindAddress: 0.0.0.0

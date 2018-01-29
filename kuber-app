@@ -129,14 +129,14 @@ function kuber-board() {
   echo
   echo "You entered: $SPITFIRE_LB_HOSTNAME"
   echo
-  echo "We will now deploy Kuber Plane..."
+  echo "We will now deploy Kuber Board..."
   echo
 
   helm install \
     --set kuber.imagePullPolicy=Always \
     --set hdfs="" \
     --set kuber.insecureBindAddress="0.0.0.0" \
-    --set kuber.plane="" \
+    --set kuber.board="" \
     --set kuber.rest="" \
     --set kuber.ws="" \
     --set microsoft.applicationId="f7194ac8-ff71-47f6-839c-e3b20f247ebc" \

@@ -35,8 +35,8 @@ spec:
               value: "{{ .Values.hdfs }}"
             - name: KUBER_INSECURE_BIND_ADDRESS
               value: "{{ .Values.kuber.insecureBindAddress }}"
-            - name: KUBER_PLANE
-              value: "{{ .Values.kuber.plane }}"
+            - name: KUBER_BOARD
+              value: "{{ .Values.kuber.board }}"
             - name: KUBER_REST
               value: "{{ .Values.kuber.rest }}"
             - name: KUBER_WS
