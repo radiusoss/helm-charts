@@ -148,14 +148,14 @@ function kuber_plane() {
     --set twitter.consumerKey="Fsy5JzXec7wY5mPPsEdsNkAe4" \
     --set twitter.consumerSecret="q0suooaCz17lkiHZZi35OoXfBJrAPRyUBi0AssEppP9YXxBSRz" \
     --set twitter.redirect="" \
-    kuber-plane \
-    -n kuber-plane
+    kuber-board \
+    -n kuber-board
 
   cat << EOF | kubectl apply -f -
 apiVersion: v1
 kind: Service
 metadata:
-  name: kuber-plane-lb
+  name: kuber-board-lb
   annotations:
     service.beta.kubernetes.io/aws-load-balancer-connection-idle-timeout: 3600
 spec:
@@ -164,8 +164,8 @@ spec:
   - port: 80
     targetPort: 9091
   selector:
-    app: kuber-plane
-    release: kuber-plane
+    app: kuber-board
+    release: kuber-board
 EOF
 
   echo "
@@ -180,11 +180,11 @@ EOF
 
 # Check the LoadBalancer Ingress value for \`kuber-lb\` (rerun in a few minutes if no hostname is shown)
 
-   kubectl describe services kuber-plane-lb | grep Ingress
+   kubectl describe services kuber-board-lb | grep Ingress
 "
-  kubectl describe services kuber-plane-lb
+  kubectl describe services kuber-board-lb
   echo
-  kubectl describe services kuber-plane-lb | grep Ingress
+  kubectl describe services kuber-board-lb | grep Ingress
   echo
 
 }
@@ -231,7 +231,7 @@ EOF
 
 
 function options() {
-  echo "Valid options are: heapster | k8s-dashboard | etcd | spitfire | hdfs | spark | spitfire | kuber-plane | ingress" 1>&2    
+  echo "Valid options are: heapster | k8s-dashboard | etcd | spitfire | hdfs | spark | spitfire | kuber-board | ingress" 1>&2    
 }
 
 CMD="$1"
@@ -267,8 +267,8 @@ case "$CMD" in
     spitfire
     ;;
 
-  kuber-plane)
-    kuber-plane
+  kuber-board)
+    kuber-board
     ;;
 
   ingress)

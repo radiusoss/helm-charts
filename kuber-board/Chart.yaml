@@ -1,11 +1,11 @@
 apiVersion: v1
 description: Web-based control plane that enables data-driven, interactive data analytics and collaborative documents.
-name: kuber-plane
+name: kuber-board
 version: 0.0.1
 appVersion: 0.0.1
 home: https://datalayer.io
 sources:
-- https://github.com/datalayer/kuber-plane
+- https://github.com/datalayer/kuber-board
 icon: http://datalayer.io/img/logo-datalayer-horizontal.png
 maintainers:
 - name: eric

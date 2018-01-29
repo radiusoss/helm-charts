@@ -1,5 +1,5 @@
 kuber:
-  image: datalayer/kuber-plane:latest
+  image: datalayer/kuber-board:latest
   imagePullPolicy: IfNotPresent
   plane: http://localhost:4326
   rest: http://localhost:4326
