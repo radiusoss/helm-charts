@@ -23,7 +23,7 @@ function heapster() {
     heapster
 }
 
-function k8s_dashboard() {
+function k8s-dashboard() {
   helm install k8s-dashboard \
     --namespace kube-system \
     --set=httpPort=3000,resources.limits.cpu=200m,rbac.create=true \
@@ -112,7 +112,7 @@ echo """
 
 }
 
-function kuber_plane() {
+function kuber-board() {
 
   echo "
   
@@ -248,7 +248,7 @@ case "$CMD" in
     ;;
 
   k8s-dashboard)
-    k8s_dashboard
+    k8s-dashboard
     ;;
 
   etcd)
