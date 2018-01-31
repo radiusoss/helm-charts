@@ -1,11 +1,11 @@
 apiVersion: v1
-description: Kuber.
-name: spitfire
+description: Kuber CLI.
+name: kuber-cli
 version: 0.0.1
 appVersion: 0.0.1
 home: https://datalayer.io
 sources:
-- https://github.com/datalayer/spitfire
+- https://github.com/datalayer/kuber
 icon: http://datalayer.io/img/logo-datalayer-horizontal.png
 maintainers:
 - name: eric

@@ -112,6 +112,12 @@ echo """
 
 }
 
+function kuber-cli() {
+  helm install kuber-cli \
+    --set kuber-cli.imagePullPolicy=Always \
+    -n kuber-cli
+}
+
 function kuber-board() {
 
   echo "
@@ -231,7 +237,7 @@ EOF
 
 
 function options() {
-  echo "Valid options are: heapster | k8s-dashboard | etcd | spitfire | hdfs | spark | spitfire | kuber-board | ingress" 1>&2    
+  echo "Valid options are: heapster | k8s-dashboard | etcd | hdfs | spark | spitfire | kuber-cli | kuber-board | ingress" 1>&2    
 }
 
 CMD="$1"
@@ -265,6 +271,10 @@ case "$CMD" in
 
   spitfire)
     spitfire
+    ;;
+
+  kuber-cli)
+    kuber-cli
     ;;
 
   kuber-board)

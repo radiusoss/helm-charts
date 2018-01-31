@@ -1,5 +1,5 @@
-spitfire:
-  image: datalayer/kuber:0.0.1
+kuber-cli:
+  image: datalayer/kuber-cli:0.0.1
   imagePullPolicy: IfNotPresent
   notebookRepo: https://github.com/datalayer/notebook-init.git
   resources:

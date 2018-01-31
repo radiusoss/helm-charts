@@ -1,9 +1,9 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}-spitfire
+  name: {{ .Release.Name }}-kuber-cli
   labels:
-    app: {{ template "spitfire.name" . }}
+    app: {{ template "kuber-cli.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -15,7 +15,7 @@ spec:
   template:
     metadata:
       labels:
-        app: {{ template "spitfire.name" . }}
+        app: {{ template "kuber-cli.name" . }}
         release: {{ .Release.Name }}
     spec:
       terminationGracePeriodSeconds: 0
@@ -29,13 +29,13 @@ spec:
                 values:
                 - master
       containers:
-        - name: spitfire
-          image: {{ .Values.spitfire.image }}
-          imagePullPolicy: {{ .Values.spitfire.imagePullPolicy }}
+        - name: kuber-cli
+          image: {{ .Values.kuber-cli.image }}
+          imagePullPolicy: {{ .Values.kuber-cli.imagePullPolicy }}
           volumeMounts:
           resources:
-{{ toYaml .Values.spitfire.resources | indent 12 }} 
-        - name: spitfire-sidecar
+{{ toYaml .Values.kuber-cli.resources | indent 12 }} 
+        - name: kuber-cli-sidecar
           image: datalayer/k8s-sidecar:1.8.2
           imagePullPolicy: IfNotPresent
           args: ["proxy", "-p", "8001"]
