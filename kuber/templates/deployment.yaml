@@ -1,0 +1,41 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-spitfire
+  labels:
+    app: {{ template "spitfire.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  strategy:
+    rollingUpdate:
+      maxUnavailable: 0
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: {{ template "spitfire.name" . }}
+        release: {{ .Release.Name }}
+    spec:
+      terminationGracePeriodSeconds: 0
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: kuber-role
+                operator: NotIn
+                values:
+                - master
+      containers:
+        - name: spitfire
+          image: {{ .Values.spitfire.image }}
+          imagePullPolicy: {{ .Values.spitfire.imagePullPolicy }}
+          volumeMounts:
+          resources:
+{{ toYaml .Values.spitfire.resources | indent 12 }} 
+        - name: spitfire-sidecar
+          image: datalayer/k8s-sidecar:1.8.2
+          imagePullPolicy: IfNotPresent
+          args: ["proxy", "-p", "8001"]

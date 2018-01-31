@@ -1,0 +1,8 @@
+spitfire:
+  image: datalayer/kuber:0.0.1
+  imagePullPolicy: IfNotPresent
+  notebookRepo: https://github.com/datalayer/notebook-init.git
+  resources:
+    limits:
+      memory: "8192Mi"
+      cpu: "3000m"

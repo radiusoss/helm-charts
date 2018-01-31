@@ -73,11 +73,11 @@ spec:
               port: 8080
             initialDelaySeconds: 20
             timeoutSeconds: 1
-{{- if .Values.hdfsK8s.useConfigMap }}
         - name: spitfire-sidecar
           image: datalayer/k8s-sidecar:1.8.2
           imagePullPolicy: IfNotPresent
           args: ["proxy", "-p", "8001"]
+{{- if .Values.hdfsK8s.useConfigMap }}
       volumes:
         - name: hdfs-config
           configMap:
