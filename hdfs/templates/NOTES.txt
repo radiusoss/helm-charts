@@ -8,9 +8,9 @@
 
    kubectl port-forward {{ template "hdfs.fullname" . }}-hdfs-nn-0 50070:50070
 
-3. This chart can also be used with the Zeppelin K8s chart:
+3. This chart can also be used with the Spitfire chart:
    
-   helm install -n {{ .Release.Namespace }} --set hdfs.useConfigMap=true,hdfs.configMapName={{ template "hdfs.fullname" . }} zeppelin-k8s -n zeppelin-k8s
+   helm install -n {{ .Release.Namespace }} --set hdfs.useConfigMap=true,hdfs.configMapName={{ template "hdfs.fullname" . }} spitfire -n spitfire
 
 4. In case of issue, open a shell and inspect the logs:
 

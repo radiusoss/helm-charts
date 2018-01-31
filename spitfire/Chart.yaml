@@ -5,7 +5,7 @@ version: 0.0.1
 appVersion: 0.0.1
 home: https://datalayer.io
 sources:
-- https://github.com/datalayer-contrib/zeppelin-k8s
+- https://github.com/datalayer/spitfire
 icon: http://datalayer.io/img/logo-datalayer-horizontal.png
 maintainers:
 - name: eric
