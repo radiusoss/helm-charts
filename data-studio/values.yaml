@@ -1,0 +1,24 @@
+kuber:
+  image: datalayer/data-studio:0.0.1
+  imagePullPolicy: IfNotPresent
+  board: http://localhost:4326
+  rest: http://localhost:4326
+  ws: ws://localhost:9091
+  insecureBindAddress: 0.0.0.0
+  resources:
+    limits:
+      memory: "4096Mi"
+      cpu: "2000m"
+microsoft:
+  applicationId: ""
+  redirect: http://localhost:4326
+  secret: ""
+  scope: User.ReadBasic.All+Contacts.Read+Mail.Send+Files.ReadWrite+Notes.ReadWrite
+hdfs: http://localhost:50070
+spitfire:
+  rest: http://localhost:8091
+  ws: ws://localhost:8091
+twitter:
+  consumerKey: ""
+  consumerSecret: ""
+  redirect": http://datalayer-001:8081/twitter/maketoken

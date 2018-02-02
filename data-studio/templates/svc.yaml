@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-kuber
+  labels:
+    app: {{ template "kuber.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  type: ClusterIP
+  ports:
+  - port: 9091
+    name: kuber-web
+  selector:
+    app: {{ template "kuber.name" . }}
+    release: {{ .Release.Name }}

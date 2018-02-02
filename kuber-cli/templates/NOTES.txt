@@ -1,4 +1,4 @@
 
-1. Connect to the Kiber pod
+1. Connect to the Kuber CLI pod
 
-   kubectl exec -n {{ .Release.Namespace }} $(kubectl get pod -n {{ .Release.Namespace }} --selector=app={{ template "kuber.name" . }} -o jsonpath='{.items...metadata.name}') -- bash
+   kubectl exec -n {{ .Release.Namespace }} $(kubectl get pod -n {{ .Release.Namespace }} --selector=app={{ template "kuber.name" . }} -o jsonpath='{.items...metadata.name}') -- sh

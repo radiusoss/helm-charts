@@ -1,9 +1,9 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}-kuber-cli
+  name: {{ .Release.Name }}-kuber
   labels:
-    app: {{ template "kuber-cli.name" . }}
+    app: {{ template "kuber.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -15,7 +15,7 @@ spec:
   template:
     metadata:
       labels:
-        app: {{ template "kuber-cli.name" . }}
+        app: {{ template "kuber.name" . }}
         release: {{ .Release.Name }}
     spec:
       terminationGracePeriodSeconds: 0
@@ -29,13 +29,13 @@ spec:
                 values:
                 - master
       containers:
-        - name: kuber-cli
-          image: {{ .Values.kuber-cli.image }}
-          imagePullPolicy: {{ .Values.kuber-cli.imagePullPolicy }}
+        - name: kuber
+          image: {{ .Values.kuber.image }}
+          imagePullPolicy: {{ .Values.kuber.imagePullPolicy }}
           volumeMounts:
           resources:
-{{ toYaml .Values.kuber-cli.resources | indent 12 }} 
-        - name: kuber-cli-sidecar
+{{ toYaml .Values.kuber.resources | indent 12 }} 
+        - name: kuber-sidecar
           image: datalayer/k8s-sidecar:1.8.2
           imagePullPolicy: IfNotPresent
           args: ["proxy", "-p", "8001"]

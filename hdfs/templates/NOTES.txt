@@ -16,6 +16,6 @@
 
    kubectl exec -n {{ .Release.Namespace }} -it {{ template "hdfs.fullname" . }}-hdfs-nn-0 -- bash
 
-5. This chart can also be used with the Zeppelin chart:
+5. You can scale up or down the number of data nodes:
    
    helm upgrade -n {{ .Release.Namespace }} --set hdfs.dataNode.replicas=6 {{ template "hdfs.fullname" . }} {{ template "hdfs.fullname" . }}
