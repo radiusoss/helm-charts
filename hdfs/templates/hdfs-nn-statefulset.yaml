@@ -48,7 +48,7 @@ spec:
             nodeSelectorTerms:
             - matchExpressions:
               - key: kuber-role
-                operator: NotIn
+                operator: In
                 values:
                 - master
       containers:
