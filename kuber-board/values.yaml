@@ -9,6 +9,12 @@ kuber:
     limits:
       memory: "4096Mi"
       cpu: "2000m"
+google:
+  apiKey: ""
+  clientId: ""
+  redirect: http://localhost:4326
+  secret: ""
+  scope: ""
 microsoft:
   applicationId: ""
   redirect: http://localhost:4326
