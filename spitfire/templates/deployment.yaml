@@ -48,6 +48,8 @@ spec:
               value: /opt/spitfire/notebook/_conf
             - name: SPITFIRE_NOTEBOOK_REPO
               value: {{ .Values.spitfire.notebookRepo }}
+            - name: ZEPPELIN_INTERPRETER_CONNECT_TIMEOUT
+              value: "60000"
 #            - name: ZEPPELIN_JAVA_OPTS
 #              value: >-
 #                -Dspark.driver.memory={{ .Values.spark.driverMemory }}
