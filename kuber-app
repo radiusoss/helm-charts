@@ -139,7 +139,7 @@ function kuber-board() {
   echo
 
   helm install \
-    --set kuber.imagePullPolicy=Always \
+    --set kuber.imagePullPolicy="Always" \
     --set hdfs="" \
     --set kuber.insecureBindAddress="0.0.0.0" \
     --set kuber.board="" \
@@ -149,13 +149,13 @@ function kuber-board() {
     --set google.clientId="448379464054-clm37e3snnt3154cak4o5jqqmu4phs92.apps.googleusercontent.com" \
     --set google.redirect="" \
     --set google.secret="ZVxzNkOk98T2vEGbF5L-EQX3" \
-    --set google.scope="profile https://www.googleapis.com/auth/contacts.readonly" \
+    --set google.scope="profile email https://www.googleapis.com/auth/contacts.readonly https://www.googleapis.com/auth/user.emails.read" \
     --set microsoft.applicationId="f7194ac8-ff71-47f6-839c-e3b20f247ebc" \
     --set microsoft.redirect="" \
     --set microsoft.secret="seuLJSMO4\$ueukZU4578)}@" \
     --set microsoft.scope="User.ReadBasic.All" \
-    --set spitfire.rest="https://$SPITFIRE_LB_HOSTNAME" \
-    --set spitfire.ws="wss://$SPITFIRE_LB_HOSTNAME" \
+    --set spitfire.rest="http://$SPITFIRE_LB_HOSTNAME" \
+    --set spitfire.ws="ws://$SPITFIRE_LB_HOSTNAME" \
     --set twitter.consumerKey="Fsy5JzXec7wY5mPPsEdsNkAe4" \
     --set twitter.consumerSecret="q0suooaCz17lkiHZZi35OoXfBJrAPRyUBi0AssEppP9YXxBSRz" \
     --set twitter.redirect="" \
