@@ -1,7 +1,0 @@
-kuber:
-  image: datalayer/kuber-cli:0.0.1
-  imagePullPolicy: IfNotPresent
-  resources:
-    limits:
-      memory: "8192Mi"
-      cpu: "3000m"

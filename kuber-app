@@ -118,7 +118,7 @@ function kuber-cli() {
     -n kuber-cli
 }
 
-function kuber-board() {
+function explorer() {
 
   echo "
   
@@ -159,14 +159,14 @@ function kuber-board() {
     --set twitter.consumerKey="Fsy5JzXec7wY5mPPsEdsNkAe4" \
     --set twitter.consumerSecret="q0suooaCz17lkiHZZi35OoXfBJrAPRyUBi0AssEppP9YXxBSRz" \
     --set twitter.redirect="" \
-    kuber-board \
-    -n kuber-board
+    explorer \
+    -n explorer
 
   cat << EOF | kubectl apply -f -
 apiVersion: v1
 kind: Service
 metadata:
-  name: kuber-board-lb
+  name: explorer-lb
   annotations:
     service.beta.kubernetes.io/aws-load-balancer-connection-idle-timeout: 3600
 spec:
@@ -175,8 +175,8 @@ spec:
   - port: 80
     targetPort: 9091
   selector:
-    app: kuber-board
-    release: kuber-board
+    app: explorer
+    release: explorer
 EOF
 
   echo "
@@ -189,137 +189,19 @@ EOF
 
   http://localhost:8001/api/v1/namespaces/default/services/http:kuber-kuber:9091/proxy
 
-# Check the LoadBalancer Ingress value for \`kuber-board-lb\` (rerun in a few minutes if no hostname is shown)
+# Check the LoadBalancer Ingress value for \`explorer-lb\` (rerun in a few minutes if no hostname is shown)
 
-   kubectl describe services kuber-board-lb | grep Ingress
+   kubectl describe services explorer-lb | grep Ingress
 "
-  kubectl describe services kuber-board-lb
+  kubectl describe services explorer-lb
   echo
-  kubectl describe services kuber-board-lb | grep Ingress
+  kubectl describe services explorer-lb | grep Ingress
   echo
 
 }
-
-function kuber-board() {
-
-  echo "
-  
-# Before running the next step, check the LoadBalancer Ingress value for \`spitifire-lb\` (rerun in a few minutes if no hostname is shown)
-
-   kubectl describe services spitfire-lb | grep Ingress
-"
-  kubectl describe services spitfire-lb
-  echo
-  kubectl describe services spitfire-lb | grep Ingress
-  echo
-  echo "Please enter the hostname created for the spitfire-lb:"
-  read SPITFIRE_LB_HOSTNAME
-  echo
-  echo "You entered: $SPITFIRE_LB_HOSTNAME"
-  echo
-  echo "We will now deploy Data Studio..."
-  echo
-
-  helm install \
-    --set kuber.imagePullPolicy=Always \
-    --set hdfs="" \
-    --set kuber.insecureBindAddress="0.0.0.0" \
-    --set kuber.board="" \
-    --set kuber.rest="" \
-    --set kuber.ws="" \
-    --set microsoft.applicationId="f7194ac8-ff71-47f6-839c-e3b20f247ebc" \
-    --set microsoft.redirect="" \
-    --set microsoft.secret="seuLJSMO4\$ueukZU4578)}@" \
-    --set microsoft.scope="User.ReadBasic.All" \
-    --set spitfire.rest="https://$SPITFIRE_LB_HOSTNAME" \
-    --set spitfire.ws="wss://$SPITFIRE_LB_HOSTNAME" \
-    --set twitter.consumerKey="Fsy5JzXec7wY5mPPsEdsNkAe4" \
-    --set twitter.consumerSecret="q0suooaCz17lkiHZZi35OoXfBJrAPRyUBi0AssEppP9YXxBSRz" \
-    --set twitter.redirect="" \
-    data-studio \
-    -n data-studio
-
-  cat << EOF | kubectl apply -f -
-apiVersion: v1
-kind: Service
-metadata:
-  name: data-studio-lb
-  annotations:
-    service.beta.kubernetes.io/aws-load-balancer-connection-idle-timeout: 3600
-spec:
-  type: LoadBalancer
-  ports:
-  - port: 80
-    targetPort: 9091
-  selector:
-    app: data-studio
-    release: data-studio
-EOF
-
-  echo "
-
-# Run K8S Proxy
-
-  kubectl proxy
-
-# Browse Kuber
-
-  http://localhost:8001/api/v1/namespaces/default/services/http:kuber-kuber:9091/proxy
-
-# Check the LoadBalancer Ingress value for \`data-studio-lb\` (rerun in a few minutes if no hostname is shown)
-
-   kubectl describe services data-studio-lb | grep Ingress
-"
-  kubectl describe services data-studio-lb
-  echo
-  kubectl describe services data-studio-lb | grep Ingress
-  echo
-
-}
-
-function ingress() {
-  
-  cat << EOF | kubectl create -f -
-apiVersion: extensions/v1beta1
-kind: Ingress
-metadata:
-  annotations:
-    kubernetes.io/ingress.class: nginx
-  name: spitfire-ingress
-  namespace: default
-spec:
-  rules:
-  - http:
-      paths:
-      - path: /
-        backend:
-          serviceName: spitfire-spitfire
-          servicePort: 8080
-EOF
-
-  cat << EOF | kubectl create -f -
-apiVersion: extensions/v1beta1
-kind: Ingress
-metadata:
-  annotations:
-    kubernetes.io/ingress.class: nginx
-  name: kuber-ingress
-  namespace: default
-spec:
-  rules:
-  - http:
-      paths:
-      - path: /
-        backend:
-          serviceName: kuber-kuber
-          servicePort: 9091
-EOF
-
-}
-
 
 function options() {
-  echo "Valid options are: heapster | k8s-dashboard | etcd | hdfs | spark | spitfire | kuber-cli | kuber-board | data-studio | ingress" 1>&2    
+  echo "Valid options are: heapster | k8s-dashboard | etcd | hdfs | spark | spitfire | explorer | ingress" 1>&2    
 }
 
 CMD="$1"
@@ -355,16 +237,8 @@ case "$CMD" in
     spitfire
     ;;
 
-  kuber-cli)
-    kuber-cli
-    ;;
-
-  kuber-board)
-    kuber-board
-    ;;
-
-  data-studio)
-    data-studio
+  explorer)
+    explorer
     ;;
 
   ingress)

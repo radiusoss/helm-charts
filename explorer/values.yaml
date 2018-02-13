@@ -1,5 +1,5 @@
 kuber:
-  image: datalayer/kuber-board:0.0.1
+  image: datalayer/explorer:0.0.1
   imagePullPolicy: IfNotPresent
   board: http://localhost:4326
   rest: http://localhost:4326

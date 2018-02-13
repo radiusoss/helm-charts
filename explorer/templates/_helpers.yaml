@@ -2,7 +2,7 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "kuber.name" -}}
+{{- define "explorer.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 24 | trimSuffix "-" -}}
 {{- end -}}
 

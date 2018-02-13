@@ -1,9 +1,9 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}-kuber
+  name: datalayer-{{ .Release.Name }}
   labels:
-    app: {{ template "kuber.name" . }}
+    app: {{ template "explorer.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -15,7 +15,7 @@ spec:
   template:
     metadata:
       labels:
-        app: {{ template "kuber.name" . }}
+        app: {{ template "explorer.name" . }}
         release: {{ .Release.Name }}
     spec:
       terminationGracePeriodSeconds: 0
@@ -77,7 +77,7 @@ spec:
               port: 9091
             initialDelaySeconds: 10
             timeoutSeconds: 1
-        - name: kuber-sidecar
+        - name: explorer-sidecar
           image: datalayer/k8s-sidecar:1.8.2
           imagePullPolicy: IfNotPresent
           args: ["proxy", "-p", "8001"]

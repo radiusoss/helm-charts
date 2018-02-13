@@ -1,11 +1,11 @@
 apiVersion: v1
-description: Kuber CLI.
-name: kuber-cli
+description: Web-based control board that enables data-driven, interactive data analytics and collaborative documents.
+name: explorer
 version: 0.0.1
 appVersion: 0.0.1
 home: https://datalayer.io
 sources:
-- https://github.com/datalayer/kuber
+- https://github.com/datalayer/explorer
 icon: http://datalayer.io/img/logo-datalayer-horizontal.png
 maintainers:
 - name: eric

@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: {{ .Release.Name }}-kuber
   labels:
-    app: {{ template "kuber.name" . }}
+    app: {{ template "explorer.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -13,5 +13,5 @@ spec:
   - port: 9091
     name: kuber-web
   selector:
-    app: {{ template "kuber.name" . }}
+    app: {{ template "explorer.name" . }}
     release: {{ .Release.Name }}
