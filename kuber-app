@@ -139,17 +139,17 @@ function explorer() {
   echo
 
   helm install \
-    --set kuber.imagePullPolicy="Always" \
-    --set hdfs="" \
-    --set kuber.insecureBindAddress="0.0.0.0" \
-    --set kuber.board="" \
-    --set kuber.rest="" \
-    --set kuber.ws="" \
     --set google.apiKey="AIzaSyA4GOtTmfHmAL5t8jn0LBZ_SsInQukugAU" \
     --set google.clientId="448379464054-clm37e3snnt3154cak4o5jqqmu4phs92.apps.googleusercontent.com" \
     --set google.redirect="" \
     --set google.secret="ZVxzNkOk98T2vEGbF5L-EQX3" \
     --set google.scope="profile email https://www.googleapis.com/auth/contacts.readonly https://www.googleapis.com/auth/user.emails.read" \
+    --set hdfs="" \
+    --set kuber.imagePullPolicy="Always" \
+    --set kuber.insecureBindAddress="0.0.0.0" \
+    --set kuber.board="" \
+    --set kuber.rest="" \
+    --set kuber.ws="" \
     --set microsoft.applicationId="f7194ac8-ff71-47f6-839c-e3b20f247ebc" \
     --set microsoft.redirect="" \
     --set microsoft.secret="seuLJSMO4\$ueukZU4578)}@" \

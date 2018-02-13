@@ -22,7 +22,7 @@ spec:
       nodeSelector:
         kuber-role: master
       containers:
-        - name: kuber
+        - name: explorer
           image: {{ .Values.kuber.image }}
           imagePullPolicy: {{ .Values.kuber.imagePullPolicy }}
           ports:
@@ -31,16 +31,6 @@ spec:
           env:
             - name: APISERVER_HOST
               value: ""
-            - name: HDFS
-              value: "{{ .Values.hdfs }}"
-            - name: KUBER_INSECURE_BIND_ADDRESS
-              value: "{{ .Values.kuber.insecureBindAddress }}"
-            - name: KUBER_BOARD
-              value: "{{ .Values.kuber.board }}"
-            - name: KUBER_REST
-              value: "{{ .Values.kuber.rest }}"
-            - name: KUBER_WS
-              value: "{{ .Values.kuber.ws }}"
             - name: GOOGLE_API_KEY
               value: "{{ .Values.google.apiKey }}"
             - name: GOOGLE_CLIENT_ID
@@ -51,6 +41,16 @@ spec:
               value: "{{ .Values.google.secret }}"
             - name: GOOGLE_SCOPE
               value: "{{ .Values.google.scope }}"
+            - name: HDFS
+              value: "{{ .Values.hdfs }}"
+            - name: KUBER_INSECURE_BIND_ADDRESS
+              value: "{{ .Values.kuber.insecureBindAddress }}"
+            - name: KUBER_BOARD
+              value: "{{ .Values.kuber.board }}"
+            - name: KUBER_REST
+              value: "{{ .Values.kuber.rest }}"
+            - name: KUBER_WS
+              value: "{{ .Values.kuber.ws }}"
             - name: MICROSOFT_APPLICATION_ID
               value: "{{ .Values.microsoft.applicationId }}"
             - name: MICROSOFT_REDIRECT

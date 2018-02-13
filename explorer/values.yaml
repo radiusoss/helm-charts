@@ -15,12 +15,12 @@ google:
   redirect: http://localhost:4326
   secret: ""
   scope: ""
+hdfs: http://localhost:50070
 microsoft:
   applicationId: ""
   redirect: http://localhost:4326
   secret: ""
   scope: User.ReadBasic.All+Contacts.Read+Mail.Send+Files.ReadWrite+Notes.ReadWrite
-hdfs: http://localhost:50070
 spitfire:
   rest: http://localhost:8091
   ws: ws://localhost:8091
