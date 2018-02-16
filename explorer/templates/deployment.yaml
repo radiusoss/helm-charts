@@ -43,10 +43,12 @@ spec:
               value: "{{ .Values.google.scope }}"
             - name: HDFS
               value: "{{ .Values.hdfs }}"
+            - name: KUBER_AUTOSCALING
+              value: "{{ .Values.kuber.autoScaling }}"
+            - name: KUBER_UI
+              value: "{{ .Values.kuber.board }}"
             - name: KUBER_INSECURE_BIND_ADDRESS
               value: "{{ .Values.kuber.insecureBindAddress }}"
-            - name: KUBER_BOARD
-              value: "{{ .Values.kuber.board }}"
             - name: KUBER_REST
               value: "{{ .Values.kuber.rest }}"
             - name: KUBER_WS

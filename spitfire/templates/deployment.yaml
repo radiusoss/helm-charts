@@ -71,7 +71,7 @@ spec:
 {{ toYaml .Values.spitfire.resources | indent 12 }} 
           readinessProbe:
             httpGet:
-              path: /
+              path: /spitfire
               port: 8080
             initialDelaySeconds: 20
             timeoutSeconds: 1

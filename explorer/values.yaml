@@ -1,6 +1,7 @@
 kuber:
   image: datalayer/explorer:0.0.1
   imagePullPolicy: IfNotPresent
+  autoScaling: "true"
   board: http://localhost:4326
   rest: http://localhost:4326
   ws: ws://localhost:9091

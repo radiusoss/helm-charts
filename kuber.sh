@@ -112,12 +112,6 @@ echo """
 
 }
 
-function kuber-cli() {
-  helm install kuber-cli \
-    --set kuber.imagePullPolicy=Always \
-    -n kuber-cli
-}
-
 function explorer() {
 
   echo "
@@ -197,6 +191,87 @@ EOF
   echo
   kubectl describe services explorer-lb | grep Ingress
   echo
+
+}
+
+function ingress() {
+
+  helm repo add stable https://kubernetes-charts.storage.googleapis.com
+
+  helm install --name cert-manager stable/cert-manager
+  
+  cat << EOF | kubectl apply -f -
+apiVersion: certmanager.k8s.io/v1alpha1
+kind: Issuer
+metadata:
+  name: letsencrypt-issuer
+  namespace: default
+spec:
+  acme:
+    # The ACME server URL
+    server: https://acme-v01.api.letsencrypt.org/directory
+    # Email address used for ACME registration
+    email: eric@datalayer.io
+    # Name of a secret used to store the ACME account private key
+    privateKeySecretRef:
+      name: letsncrypt-explorer-secret
+    # Enable HTTP01 validations
+    http01: {}
+EOF
+
+  cat << EOF | kubectl apply -f -
+apiVersion: certmanager.k8s.io/v1alpha1
+kind: Certificate
+metadata:
+  name: letsncrypt-explorer-crt
+spec:
+  secretName: letsncrypt-explorer-secret
+  commonName: exp4.datalayer.io
+  dnsNames:
+  - bar.example.com  
+  issuerRef:
+    name: letsencrypt-issuer
+    # We can reference ClusterIssuers by changing the kind here.
+    # The default value is Issuer (i.e. a locally namespaced Issuer)
+    kind: Issuer
+EOF
+
+  cat << EOF | kubectl apply -f -
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ingress
+  namespace: default
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    kubernetes.io/tls-acme: "true"
+    certmanager.k8s.io/issuer: "letsencrypt-issuer"
+#    ingress.kubernetes.io/ssl-redirect: "true"
+spec:
+  rules:
+  - host: exp4.datalayer.io
+    http:
+      paths:
+      - path: /spitfire
+        backend:
+          serviceName: spitfire-spitfire
+          servicePort: 8080
+      - path: /kuber
+        backend:
+          serviceName: explorer-kuber
+          servicePort: 9091
+      - path: /
+        backend:
+          serviceName: explorer-kuber
+          servicePort: 9091
+  tls:
+    - hosts:
+        - exp4.datalayer.io
+      secretName: letsncrypt-explorer-secret
+EOF
+
+  helm install ingress \
+    -n ingress
 
 }
 
