@@ -194,7 +194,14 @@ EOF
 
 }
 
-function ingress() {
+function cert-manager() {
+
+  export COMMON_NAME=$COMMON_NAME
+  export DNS_NAME=$DNS_NAME
+
+  openssl genrsa -out ca.key 2048
+  openssl req -x509 -new -nodes -key ca.key -subj "/CN=${COMMON_NAME}" -days 3650 -out ca.crt
+  kubectl create secret tls issuer-key --cert=ca.crt --key=ca.key --namespace default
 
 #    cert-manager \
   helm install \
@@ -202,12 +209,7 @@ function ingress() {
     --name cert-manager \
     --namespace default
 
-  export COMMON_NAME=datalayer.io
-  export DNS_NAME=a90d1550f12ea11e882360208f03724d-1324046284.eu-central-1.elb.amazonaws.com
-
-  openssl genrsa -out ca.key 2048
-  openssl req -x509 -new -nodes -key ca.key -subj "/CN=${COMMON_NAME}" -days 3650 -out ca.crt
-  kubectl create secret tls issuer-key --cert=ca.crt --key=ca.key --namespace default
+# ---
 
   cat << EOF | kubectl apply -f -
 apiVersion: certmanager.k8s.io/v1alpha1
@@ -224,10 +226,10 @@ EOF
 apiVersion: certmanager.k8s.io/v1alpha1
 kind: Certificate
 metadata:
-  name: "${DNS_NAME}-ca-cert"
+  name: explorer-ca-cert
   namespace: default
 spec:
-  secretName: "${DNS_NAME}-ca-tls"
+  secretName: explorer-ca-tls
   issuerRef:
     name: ca-issuer
     kind: Issuer
@@ -236,15 +238,15 @@ spec:
   - "${DNS_NAME}"
 EOF
 
-  kubectl get secret ${DNS_NAME}-ca-tls -o yaml
-  kubectl describe certificate ${DNS_NAME}-ca-cert
+  kubectl get secret explorer-ca-tls -o yaml
+  kubectl describe certificate explorer-ca-cert
 
 # ---
 
   cat << EOF | kubectl apply -f -
 apiVersion: certmanager.k8s.io/v1alpha1
 kind: Issuer
-metadata:
+metadata: 
   name: letsencrypt-issuer
   namespace: default
 spec:
@@ -254,32 +256,23 @@ spec:
     privateKeySecretRef:
       name: issuer-key
     http01: {}
+    dns01:
+      providers:
+      - name: route53
+        route53:
+          accessKeyID: AKIAJSZGXMTQZPJVDKBA
+          region: eu-central-1
+          secretAccessKeySecretRef:
+            name: route53-secret-key
+            key: aws-id-secret
 EOF
 
-  cat << EOF | kubectl apply -f -
-apiVersion: certmanager.k8s.io/v1alpha1
-kind: Certificate
-metadata:
-  name: "${DNS_NAME}-letsencrypt-cert"
-  namespace: default
-spec:
-  secretName: "${DNS_NAME}-letsencrypt-tls"
-  issuerRef:
-    name: letsencrypt-issuer
-    kind: Issuer
-  commonName: "${COMMON_NAME}"
-  acme:
-    config:
-    - http01: 
-        ingressClass: nginx
-      domains:
-      - "${DNS_NAME}"
-EOF
+}
 
-  kubectl get secret ${DNS_NAME}-letsencrypt-tls -o yaml
-  kubectl describe certificate ${DNS_NAME}-letsencrypt-cert
+function ingress() {
 
-# ---
+  export COMMON_NAME=$COMMON_NAME
+  export DNS_NAME=$DNS_NAME
 
   helm install ingress \
     -n ingress
@@ -291,9 +284,10 @@ metadata:
   name: explorer
   namespace: default
   annotations:
+#    nginx.org/websocket-services: "spitfire-spitfire,explorer-kuber"
+#    certmanager.k8s.io/issuer: letsencrypt-issuer
 #    ingress.kubernetes.io/ssl-redirect: true
     kubernetes.io/ingress.class: nginx
-    certmanager.k8s.io/issuer: letsencrypt-issuer
 spec:
   rules:
   - host: "${DNS_NAME}"
@@ -311,15 +305,43 @@ spec:
         backend:
           serviceName: explorer-kuber
           servicePort: 9091
-  tls:
-    - hosts:
-        - "${DNS_NAME}"
+#  tls:
+#    - hosts:
+#        - "${DNS_NAME}"
+#      secretName: explorer-letsencrypt-tls
 EOF
+
+  cat << EOF | kubectl apply -f -
+apiVersion: certmanager.k8s.io/v1alpha1
+kind: Certificate
+metadata:
+  name: explorer-letsencrypt-cert
+  namespace: default
+spec:
+  secretName: explorer-letsencrypt-tls
+  issuerRef:
+    name: letsencrypt-issuer
+    kind: Issuer
+  commonName: "${COMMON_NAME}"
+  acme:
+    config:
+    - http01:
+        ingressClass: nginx
+      domains:
+      - "${DNS_NAME}"
+    - dns01:
+        provider: route53
+      domains:
+      - "${DNS_NAME}"
+EOF
+
+  kubectl describe certificate explorer-letsencrypt-cert
+  kubectl get secret explorer-letsencrypt-tls -o yaml
 
 }
 
 function options() {
-  echo "Valid options are: heapster | k8s-dashboard | etcd | hdfs | spark | spitfire | explorer | ingress" 1>&2    
+  echo "Valid options are: heapster | k8s-dashboard | etcd | hdfs | spark | spitfire | explorer | cert-manager | ingress" 1>&2    
 }
 
 CMD="$1"
@@ -357,6 +379,10 @@ case "$CMD" in
 
   explorer)
     explorer
+    ;;
+
+  cert-manager)
+    cert-manager
     ;;
 
   ingress)
