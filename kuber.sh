@@ -141,7 +141,7 @@ function explorer() {
     --set hdfs="" \
     --set kuber.imagePullPolicy="Always" \
     --set kuber.insecureBindAddress="0.0.0.0" \
-    --set kuber.board="" \
+    --set kuber.ui="" \
     --set kuber.rest="" \
     --set kuber.ws="" \
     --set microsoft.applicationId="f7194ac8-ff71-47f6-839c-e3b20f247ebc" \
@@ -196,10 +196,51 @@ EOF
 
 function ingress() {
 
-  helm repo add stable https://kubernetes-charts.storage.googleapis.com
+#    cert-manager \
+  helm install \
+    stable/cert-manager \
+    --name cert-manager \
+    --namespace default
 
-  helm install --name cert-manager stable/cert-manager
-  
+  export COMMON_NAME=datalayer.io
+  export DNS_NAME=a90d1550f12ea11e882360208f03724d-1324046284.eu-central-1.elb.amazonaws.com
+
+  openssl genrsa -out ca.key 2048
+  openssl req -x509 -new -nodes -key ca.key -subj "/CN=${COMMON_NAME}" -days 3650 -out ca.crt
+  kubectl create secret tls issuer-key --cert=ca.crt --key=ca.key --namespace default
+
+  cat << EOF | kubectl apply -f -
+apiVersion: certmanager.k8s.io/v1alpha1
+kind: Issuer
+metadata:
+  name: ca-issuer
+  namespace: default
+spec:
+  ca:
+    secretName: issuer-key
+EOF
+
+  cat << EOF | kubectl apply -f -
+apiVersion: certmanager.k8s.io/v1alpha1
+kind: Certificate
+metadata:
+  name: "${DNS_NAME}-ca-cert"
+  namespace: default
+spec:
+  secretName: "${DNS_NAME}-ca-tls"
+  issuerRef:
+    name: ca-issuer
+    kind: Issuer
+  commonName: "${COMMON_NAME}"
+  dnsNames:
+  - "${DNS_NAME}"
+EOF
+
+  kubectl get secret ${DNS_NAME}-ca-tls -o yaml
+  kubectl describe certificate ${DNS_NAME}-ca-cert
+
+# ---
+
   cat << EOF | kubectl apply -f -
 apiVersion: certmanager.k8s.io/v1alpha1
 kind: Issuer
@@ -208,14 +249,10 @@ metadata:
   namespace: default
 spec:
   acme:
-    # The ACME server URL
     server: https://acme-v01.api.letsencrypt.org/directory
-    # Email address used for ACME registration
     email: eric@datalayer.io
-    # Name of a secret used to store the ACME account private key
     privateKeySecretRef:
-      name: letsncrypt-explorer-secret
-    # Enable HTTP01 validations
+      name: issuer-key
     http01: {}
 EOF
 
@@ -223,33 +260,43 @@ EOF
 apiVersion: certmanager.k8s.io/v1alpha1
 kind: Certificate
 metadata:
-  name: letsncrypt-explorer-crt
+  name: "${DNS_NAME}-letsencrypt-cert"
+  namespace: default
 spec:
-  secretName: letsncrypt-explorer-secret
-  commonName: exp4.datalayer.io
-  dnsNames:
-  - bar.example.com  
+  secretName: "${DNS_NAME}-letsencrypt-tls"
   issuerRef:
     name: letsencrypt-issuer
-    # We can reference ClusterIssuers by changing the kind here.
-    # The default value is Issuer (i.e. a locally namespaced Issuer)
     kind: Issuer
+  commonName: "${COMMON_NAME}"
+  acme:
+    config:
+    - http01: 
+        ingressClass: nginx
+      domains:
+      - "${DNS_NAME}"
 EOF
+
+  kubectl get secret ${DNS_NAME}-letsencrypt-tls -o yaml
+  kubectl describe certificate ${DNS_NAME}-letsencrypt-cert
+
+# ---
+
+  helm install ingress \
+    -n ingress
 
   cat << EOF | kubectl apply -f -
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: ingress
+  name: explorer
   namespace: default
   annotations:
-    kubernetes.io/ingress.class: "nginx"
-    kubernetes.io/tls-acme: "true"
-    certmanager.k8s.io/issuer: "letsencrypt-issuer"
-#    ingress.kubernetes.io/ssl-redirect: "true"
+#    ingress.kubernetes.io/ssl-redirect: true
+    kubernetes.io/ingress.class: nginx
+    certmanager.k8s.io/issuer: letsencrypt-issuer
 spec:
   rules:
-  - host: exp4.datalayer.io
+  - host: "${DNS_NAME}"
     http:
       paths:
       - path: /spitfire
@@ -266,12 +313,8 @@ spec:
           servicePort: 9091
   tls:
     - hosts:
-        - exp4.datalayer.io
-      secretName: letsncrypt-explorer-secret
+        - "${DNS_NAME}"
 EOF
-
-  helm install ingress \
-    -n ingress
 
 }
 

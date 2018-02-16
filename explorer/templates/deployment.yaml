@@ -46,7 +46,7 @@ spec:
             - name: KUBER_AUTOSCALING
               value: "{{ .Values.kuber.autoScaling }}"
             - name: KUBER_UI
-              value: "{{ .Values.kuber.board }}"
+              value: "{{ .Values.kuber.ui }}"
             - name: KUBER_INSECURE_BIND_ADDRESS
               value: "{{ .Values.kuber.insecureBindAddress }}"
             - name: KUBER_REST
