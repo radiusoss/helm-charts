@@ -139,10 +139,11 @@ function explorer() {
     --set google.secret="ZVxzNkOk98T2vEGbF5L-EQX3" \
     --set google.scope="profile email https://www.googleapis.com/auth/contacts.readonly https://www.googleapis.com/auth/user.emails.read" \
     --set hdfs="" \
+    --set kuber.autoScaling="true" \
     --set kuber.imagePullPolicy="Always" \
     --set kuber.insecureBindAddress="0.0.0.0" \
-    --set kuber.ui="" \
     --set kuber.rest="" \
+    --set kuber.ui="" \
     --set kuber.ws="" \
     --set microsoft.applicationId="f7194ac8-ff71-47f6-839c-e3b20f247ebc" \
     --set microsoft.redirect="" \
