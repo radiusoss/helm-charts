@@ -6,14 +6,9 @@ defaultBackend:
 
 controller:
 #  defaultBackendService: "default/explorer-kuber"
-  hostNetwork: true
+  hostNetwork: false
   nodeSelector:
     kuber-role: "master"
-  service:
-    type: "NodePort"
-    targetPorts:
-      http: 80
-#      https: 443
 
 # tcp:
 #  81: "default/spitfire-spitfire:8080"

@@ -276,7 +276,7 @@ EOF
 function ingress() {
 
   helm install ingress \
-    -f ingress.yaml \
+    -f ingress/values-3.yaml \
     -n ingress
 
   export COMMON_NAME=$COMMON_NAME
@@ -289,10 +289,11 @@ metadata:
   name: explorer
   namespace: default
   annotations:
-#    nginx.org/websocket-services: "spitfire-spitfire,explorer-kuber"
+#    nginx.org/websocket-services: "spitfire-spitfire,explorer-explorer"
 #    certmanager.k8s.io/issuer: letsencrypt-issuer
 #    ingress.kubernetes.io/ssl-redirect: true
     kubernetes.io/ingress.class: nginx
+#    service.beta.kubernetes.io/aws-load-balancer-additional-resource-tags: "kuber-role=spitfire"
 spec:
   rules:
   - host: "${DNS_NAME}"
