@@ -39,6 +39,7 @@ spec:
           {{- end }}
           args:
             - /nginx-ingress-controller
+            - --https-port=444
             - --default-backend-service={{ if .Values.defaultBackend.enabled }}{{ .Release.Namespace }}/{{ template "nginx-ingress.defaultBackend.fullname" . }}{{ else }}{{ .Values.controller.defaultBackendService }}{{ end }}
           {{- if and (semverCompare ">=0.9.0-beta.1" .Values.controller.image.tag) .Values.controller.publishService.enabled }}
             - --publish-service={{ template "nginx-ingress.controller.publishServicePath" . }}
@@ -100,12 +101,12 @@ spec:
               {{- if .Values.controller.daemonset.useHostPorts }}
               hostPort: 80
               {{- end }}
-            - name: https
-              containerPort: 443
-              protocol: TCP
-              {{- if .Values.controller.daemonset.useHostPorts }}
-              hostPort: 443
-              {{- end }}
+#            - name: https
+#              containerPort: 443
+#              protocol: TCP
+#              {{- if .Values.controller.daemonset.useHostPorts }}
+#              hostPort: 443
+#              {{- end }}
           {{- if .Values.controller.stats.enabled }}
             - name: stats
               containerPort: 18080

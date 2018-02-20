@@ -57,6 +57,7 @@ function spark() {
 function spitfire() {
 
   helm install \
+    --set spitfire.hostNetwork=false \
     --set spitfire.imagePullPolicy=Always \
     --set spitfire.notebookRepo=https://github.com/datalayer/notebook-init.git \
     spitfire \
@@ -133,6 +134,8 @@ function explorer() {
   echo
 
   helm install \
+    --set explorer.hostNetwork=false \
+    --set explorer.imagePullPolicy="Always" \
     --set google.apiKey="AIzaSyA4GOtTmfHmAL5t8jn0LBZ_SsInQukugAU" \
     --set google.clientId="448379464054-clm37e3snnt3154cak4o5jqqmu4phs92.apps.googleusercontent.com" \
     --set google.redirect="" \
@@ -140,8 +143,8 @@ function explorer() {
     --set google.scope="profile email https://www.googleapis.com/auth/contacts.readonly https://www.googleapis.com/auth/user.emails.read" \
     --set hdfs="" \
     --set kuber.autoScaling="true" \
-    --set kuber.imagePullPolicy="Always" \
     --set kuber.insecureBindAddress="0.0.0.0" \
+    --set kuber.insecurePort="9091" \
     --set kuber.rest="" \
     --set kuber.ui="" \
     --set kuber.ws="" \
@@ -272,11 +275,12 @@ EOF
 
 function ingress() {
 
+  helm install ingress \
+    -f ingress.yaml \
+    -n ingress
+
   export COMMON_NAME=$COMMON_NAME
   export DNS_NAME=$DNS_NAME
-
-  helm install ingress \
-    -n ingress
 
   cat << EOF | kubectl apply -f -
 apiVersion: extensions/v1beta1
@@ -300,11 +304,11 @@ spec:
           servicePort: 8080
       - path: /kuber
         backend:
-          serviceName: explorer-kuber
+          serviceName: explorer-explorer
           servicePort: 9091
       - path: /
         backend:
-          serviceName: explorer-kuber
+          serviceName: explorer-explorer
           servicePort: 9091
 #  tls:
 #    - hosts:

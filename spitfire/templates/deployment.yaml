@@ -28,6 +28,7 @@ spec:
                 operator: In
                 values:
                 - master
+      hostNetwork: {{ .Values.spitfire.hostNetwork }}
       containers:
         - name: spitfire
           image: {{ .Values.spitfire.image }}
@@ -54,7 +55,7 @@ spec:
 #              value: >-
 #                -Dspark.driver.memory={{ .Values.spark.driverMemory }}
 #                -Dspark.executor.memory={{ .Values.spark.executorMemory }}
-#{{- if .Values.hdfsK8s.useConfigMap }}
+#{{- if .Values.hdfs.useConfigMap }}
 #            - name: MASTER
 #              value: "k8s://https://kubernetes:443"
 #            - name: SPARK_SUBMIT_OPTIONS
@@ -63,8 +64,8 @@ spec:
 #                --num-executors {{ .Values.spark.numExecutors }}
 #{{- end }}
           volumeMounts:
-{{- if .Values.hdfsK8s.useConfigMap }}
-            - mountPath: {{ .Values.hdfsK8s.configPath }}
+{{- if .Values.hdfs.useConfigMap }}
+            - mountPath: {{ .Values.hdfs.configPath }}
               name: hdfs-config
 {{- end }}
           resources:
@@ -79,9 +80,9 @@ spec:
           image: datalayer/k8s-sidecar:1.8.2
           imagePullPolicy: IfNotPresent
           args: ["proxy", "-p", "8001"]
-{{- if .Values.hdfsK8s.useConfigMap }}
+{{- if .Values.hdfs.useConfigMap }}
       volumes:
         - name: hdfs-config
           configMap:
-            name: {{ .Values.hdfsK8s.configMapName }}
+            name: {{ .Values.hdfs.configMapName }}
 {{- end }}

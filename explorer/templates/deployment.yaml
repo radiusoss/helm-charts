@@ -21,10 +21,11 @@ spec:
       terminationGracePeriodSeconds: 0
       nodeSelector:
         kuber-role: master
+      hostNetwork: {{ .Values.explorer.hostNetwork }}
       containers:
         - name: explorer
-          image: {{ .Values.kuber.image }}
-          imagePullPolicy: {{ .Values.kuber.imagePullPolicy }}
+          image: {{ .Values.explorer.image }}
+          imagePullPolicy: {{ .Values.explorer.imagePullPolicy }}
           ports:
             - containerPort: 9091
               name: web
@@ -49,6 +50,8 @@ spec:
               value: "{{ .Values.kuber.ui }}"
             - name: KUBER_INSECURE_BIND_ADDRESS
               value: "{{ .Values.kuber.insecureBindAddress }}"
+            - name: KUBER_INSECURE_PORT
+              value: "{{ .Values.kuber.insecurePort }}"
             - name: KUBER_REST
               value: "{{ .Values.kuber.rest }}"
             - name: KUBER_WS
@@ -76,7 +79,7 @@ spec:
           readinessProbe:
             httpGet:
               path: /
-              port: 9091
+              port: {{ .Values.kuber.insecurePort }}
             initialDelaySeconds: 10
             timeoutSeconds: 1
         - name: explorer-sidecar

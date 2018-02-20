@@ -1,11 +1,14 @@
-kuber:
+explorer:
   image: datalayer/explorer:0.0.1
   imagePullPolicy: IfNotPresent
+  hostNetwork: false
+kuber:
   autoScaling: "true"
   board: http://localhost:4326
   rest: http://localhost:4326
   ws: ws://localhost:9091
   insecureBindAddress: 0.0.0.0
+  insecurePort: 9091
   resources:
     limits:
       memory: "4096Mi"
