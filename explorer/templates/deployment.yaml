@@ -44,16 +44,16 @@ spec:
               value: "{{ .Values.google.scope }}"
             - name: HDFS
               value: "{{ .Values.hdfs }}"
-            - name: KUBER_AUTOSCALING
-              value: "{{ .Values.kuber.autoScaling }}"
-            - name: KUBER_UI
-              value: "{{ .Values.kuber.ui }}"
             - name: KUBER_INSECURE_BIND_ADDRESS
               value: "{{ .Values.kuber.insecureBindAddress }}"
             - name: KUBER_INSECURE_PORT
               value: "{{ .Values.kuber.insecurePort }}"
+            - name: KUBER_MANAGE_RESERVATIONS
+              value: "{{ .Values.kuber.manageReservations }}"
             - name: KUBER_REST
               value: "{{ .Values.kuber.rest }}"
+            - name: KUBER_UI
+              value: "{{ .Values.kuber.ui }}"
             - name: KUBER_WS
               value: "{{ .Values.kuber.ws }}"
             - name: MICROSOFT_APPLICATION_ID

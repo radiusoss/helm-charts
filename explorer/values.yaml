@@ -3,7 +3,7 @@ explorer:
   imagePullPolicy: IfNotPresent
   hostNetwork: false
 kuber:
-  autoScaling: "true"
+  manageReservations: "true"
   board: http://localhost:4326
   rest: http://localhost:4326
   ws: ws://localhost:9091
