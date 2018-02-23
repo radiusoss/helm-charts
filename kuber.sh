@@ -286,7 +286,7 @@ function ingress() {
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: explorer
+  name: datalayer-explorer
   namespace: default
   annotations:
 #    nginx.org/websocket-services: "spitfire-spitfire,explorer-explorer"
