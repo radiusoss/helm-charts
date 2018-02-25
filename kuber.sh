@@ -279,7 +279,6 @@ function ingress() {
     -f ingress/values-3.yaml \
     -n ingress
 
-  export COMMON_NAME=$COMMON_NAME
   export DNS_NAME=$DNS_NAME
 
   cat << EOF | kubectl apply -f -
@@ -316,6 +315,13 @@ spec:
 #        - "${DNS_NAME}"
 #      secretName: explorer-letsencrypt-tls
 EOF
+
+}
+
+function ingress-cert() {
+
+  export COMMON_NAME=$COMMON_NAME
+  export DNS_NAME=$DNS_NAME
 
   cat << EOF | kubectl apply -f -
 apiVersion: certmanager.k8s.io/v1alpha1
