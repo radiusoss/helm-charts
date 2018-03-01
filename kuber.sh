@@ -207,45 +207,40 @@ function cert-manager() {
   openssl req -x509 -new -nodes -key ca.key -subj "/CN=${COMMON_NAME}" -days 3650 -out ca.crt
   kubectl create secret tls issuer-key --cert=ca.crt --key=ca.key --namespace default
 
-#    cert-manager \
   helm install \
-    stable/cert-manager \
+    cert-manager \
     --name cert-manager \
     --namespace default
 
-# ---
+#   cat << EOF | kubectl apply -f -
+# apiVersion: certmanager.k8s.io/v1alpha1
+# kind: Issuer
+# metadata:
+#   name: ca-issuer
+#   namespace: default
+# spec:
+#   ca:
+#     secretName: issuer-key
+# EOF
 
-  cat << EOF | kubectl apply -f -
-apiVersion: certmanager.k8s.io/v1alpha1
-kind: Issuer
-metadata:
-  name: ca-issuer
-  namespace: default
-spec:
-  ca:
-    secretName: issuer-key
-EOF
+#   cat << EOF | kubectl apply -f -
+# apiVersion: certmanager.k8s.io/v1alpha1
+# kind: Certificate
+# metadata:
+#   name: explorer-ca-cert
+#   namespace: default
+# spec:
+#   secretName: explorer-ca-tls
+#   issuerRef:
+#     name: ca-issuer
+#     kind: Issuer
+#   commonName: "${COMMON_NAME}"
+#   dnsNames:
+#   - "${DNS_NAME}"
+# EOF
 
-  cat << EOF | kubectl apply -f -
-apiVersion: certmanager.k8s.io/v1alpha1
-kind: Certificate
-metadata:
-  name: explorer-ca-cert
-  namespace: default
-spec:
-  secretName: explorer-ca-tls
-  issuerRef:
-    name: ca-issuer
-    kind: Issuer
-  commonName: "${COMMON_NAME}"
-  dnsNames:
-  - "${DNS_NAME}"
-EOF
-
-  kubectl get secret explorer-ca-tls -o yaml
-  kubectl describe certificate explorer-ca-cert
-
-# ---
+#   kubectl get secret explorer-ca-tls -o yaml
+#   kubectl describe certificate explorer-ca-cert
 
   cat << EOF | kubectl apply -f -
 apiVersion: certmanager.k8s.io/v1alpha1
@@ -260,15 +255,15 @@ spec:
     privateKeySecretRef:
       name: issuer-key
     http01: {}
-    dns01:
-      providers:
-      - name: route53
-        route53:
-          accessKeyID: AKIAJSZGXMTQZPJVDKBA
-          region: eu-central-1
-          secretAccessKeySecretRef:
-            name: route53-secret-key
-            key: aws-id-secret
+#     dns01:
+#      providers:
+#       - name: route53
+#         route53:
+#           accessKeyID: AKIAJSZGXMTQZPJVDKBA
+#           region: eu-central-1
+#           secretAccessKeySecretRef:
+#             name: route53-secret-key
+#             key: aws-id-secret
 EOF
 
 }
@@ -276,10 +271,35 @@ EOF
 function ingress() {
 
   helm install ingress \
-    -f ingress/values-3.yaml \
+    -f ingress/values-explorer.yaml \
     -n ingress
 
   export DNS_NAME=$DNS_NAME
+
+  cat << EOF | kubectl apply -f -
+apiVersion: certmanager.k8s.io/v1alpha1
+kind: Certificate
+metadata:
+  name: explorer-cert
+  namespace: default
+spec:
+  secretName: explorer-cert-tls
+  issuerRef:
+    name: letsencrypt-issuer
+    kind: Issuer
+  commonName: "${COMMON_NAME}"
+  acme:
+    config:
+    - http01:
+        ingressClass: nginx
+      domains:
+      - "${DNS_NAME}"
+#    - dns01:
+#        provider: route53
+EOF
+
+#   kubectl describe certificate explorer-letsencrypt-cert
+#   kubectl get secret explorer-letsencrypt-tls -o yaml
 
   cat << EOF | kubectl apply -f -
 apiVersion: extensions/v1beta1
@@ -288,12 +308,14 @@ metadata:
   name: explorer
   namespace: default
   annotations:
-#    nginx.org/websocket-services: "spitfire-spitfire,explorer-explorer"
-#    certmanager.k8s.io/issuer: letsencrypt-issuer
-#    ingress.kubernetes.io/ssl-redirect: true
-    kubernetes.io/ingress.class: nginx
-#    service.beta.kubernetes.io/aws-load-balancer-additional-resource-tags: "kuber-role=spitfire"
+#    "nginx.org/websocket-services": "spitfire-spitfire,explorer-explorer"
+#    "certmanager.k8s.io/issuer": "letsencrypt-issuer"
+#    "certmanager.k8s.io/acme-challenge-type": "http01"
 spec:
+  tls:
+    - hosts:
+      - "${DNS_NAME}"
+      secretName: explorer-cert-tls
   rules:
   - host: "${DNS_NAME}"
     http:
@@ -310,45 +332,7 @@ spec:
         backend:
           serviceName: explorer-explorer
           servicePort: 9091
-#  tls:
-#    - hosts:
-#        - "${DNS_NAME}"
-#      secretName: explorer-letsencrypt-tls
 EOF
-
-}
-
-function ingress-cert() {
-
-  export COMMON_NAME=$COMMON_NAME
-  export DNS_NAME=$DNS_NAME
-
-  cat << EOF | kubectl apply -f -
-apiVersion: certmanager.k8s.io/v1alpha1
-kind: Certificate
-metadata:
-  name: explorer-letsencrypt-cert
-  namespace: default
-spec:
-  secretName: explorer-letsencrypt-tls
-  issuerRef:
-    name: letsencrypt-issuer
-    kind: Issuer
-  commonName: "${COMMON_NAME}"
-  acme:
-    config:
-    - http01:
-        ingressClass: nginx
-      domains:
-      - "${DNS_NAME}"
-    - dns01:
-        provider: route53
-      domains:
-      - "${DNS_NAME}"
-EOF
-
-  kubectl describe certificate explorer-letsencrypt-cert
-  kubectl get secret explorer-letsencrypt-tls -o yaml
 
 }
 
