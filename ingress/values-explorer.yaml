@@ -8,9 +8,11 @@ controller:
   service:
     annotations: {
       "kubernetes.io/ingress.class": "nginx",
-      "service.beta.kubernetes.io/aws-load-balancer-backend-protocol": "https",
       "service.beta.kubernetes.io/aws-load-balancer-ssl-ports": "https",
-      "service.beta.kubernetes.io/aws-load-balancer-additional-resource-tags": "kuber-role=explorer",
+#      "service.beta.kubernetes.io/aws-load-balancer-backend-protocol": "https",
+      "service.beta.kubernetes.io/aws-load-balancer-backend-protocol": "http",
+      "service.beta.kubernetes.io/aws-load-balancer-ssl-cert": "arn:aws:acm:eu-central-1:345579675507:certificate/359158b9-f3ae-4e7f-9adf-de2586f1c6eb",
+       "service.beta.kubernetes.io/aws-load-balancer-additional-resource-tags": "kuber-role=explorer",
       "ingress.kubernetes.io/ssl-redirect": "true"
     }
 # tcp:

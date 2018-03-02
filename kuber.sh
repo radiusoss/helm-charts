@@ -212,32 +212,32 @@ function cert-manager() {
     --name cert-manager \
     --namespace default
 
-#   cat << EOF | kubectl apply -f -
-# apiVersion: certmanager.k8s.io/v1alpha1
-# kind: Issuer
-# metadata:
-#   name: ca-issuer
-#   namespace: default
-# spec:
-#   ca:
-#     secretName: issuer-key
-# EOF
+  cat << EOF | kubectl apply -f -
+apiVersion: certmanager.k8s.io/v1alpha1
+kind: Issuer
+metadata:
+  name: ca-issuer
+  namespace: default
+spec:
+  ca:
+    secretName: issuer-key
+EOF
 
-#   cat << EOF | kubectl apply -f -
-# apiVersion: certmanager.k8s.io/v1alpha1
-# kind: Certificate
-# metadata:
-#   name: explorer-ca-cert
-#   namespace: default
-# spec:
-#   secretName: explorer-ca-tls
-#   issuerRef:
-#     name: ca-issuer
-#     kind: Issuer
-#   commonName: "${COMMON_NAME}"
-#   dnsNames:
-#   - "${DNS_NAME}"
-# EOF
+  cat << EOF | kubectl apply -f -
+apiVersion: certmanager.k8s.io/v1alpha1
+kind: Certificate
+metadata:
+  name: explorer-ca-cert
+  namespace: default
+spec:
+  secretName: explorer-ca-tls
+  issuerRef:
+    name: ca-issuer
+    kind: Issuer
+  commonName: "${COMMON_NAME}"
+  dnsNames:
+  - "${DNS_NAME}"
+EOF
 
 #   kubectl get secret explorer-ca-tls -o yaml
 #   kubectl describe certificate explorer-ca-cert
@@ -259,7 +259,7 @@ spec:
 #      providers:
 #       - name: route53
 #         route53:
-#           accessKeyID: AKIAJSZGXMTQZPJVDKBA
+#           accessKeyID: xxx
 #           region: eu-central-1
 #           secretAccessKeySecretRef:
 #             name: route53-secret-key
@@ -312,10 +312,10 @@ metadata:
 #    "certmanager.k8s.io/issuer": "letsencrypt-issuer"
 #    "certmanager.k8s.io/acme-challenge-type": "http01"
 spec:
-  tls:
-    - hosts:
-      - "${DNS_NAME}"
-      secretName: explorer-cert-tls
+#  tls:
+#    - hosts:
+#      - "${DNS_NAME}"
+#      secretName: explorer-cert-tls
   rules:
   - host: "${DNS_NAME}"
     http:
