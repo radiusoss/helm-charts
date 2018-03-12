@@ -8,11 +8,11 @@ controller:
   service:
     annotations: {
       "kubernetes.io/ingress.class": "nginx",
+      "ingress.kubernetes.io/ssl-redirect": "true",
       "service.beta.kubernetes.io/aws-load-balancer-ssl-ports": "*",
       "service.beta.kubernetes.io/aws-load-balancer-backend-protocol": "tcp",
       "service.beta.kubernetes.io/aws-load-balancer-ssl-cert": "arn:aws:acm:eu-central-1:345579675507:certificate/1537656e-b446-4e36-aec5-9b55da4c759d",
-       "service.beta.kubernetes.io/aws-load-balancer-additional-resource-tags": "kuber-role=explorer",
-      "ingress.kubernetes.io/ssl-redirect": "true"
+      "service.beta.kubernetes.io/aws-load-balancer-additional-resource-tags": "kuber-role=explorer"
     }
 # tcp:
 #  81: "default/spitfire-spitfire:8080"
