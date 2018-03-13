@@ -1,5 +1,5 @@
 explorer:
-  image: datalayer/explorer:0.0.1
+  image: 100392638540.dkr.ecr.us-west-2.amazonaws.com/explorer:0.0.1
   imagePullPolicy: IfNotPresent
   hostNetwork: false
 kuber:
@@ -31,4 +31,4 @@ spitfire:
 twitter:
   consumerKey: ""
   consumerSecret: ""
-  redirect": http://datalayer-001:8081/twitter/maketoken
+  redirect: http://datalayer-001:8081/twitter/maketoken

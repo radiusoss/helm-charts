@@ -59,39 +59,9 @@ function spitfire() {
   helm install \
     --set spitfire.hostNetwork=false \
     --set spitfire.imagePullPolicy=Always \
-    --set spitfire.notebookRepo=https://github.com/datalayer/notebook-init.git \
+    --set spitfire.notebookRepo=https://github.com/radiusoss/notebook-init.git \
     spitfire \
     -n spitfire
-
-  cat << EOF | kubectl apply -f -
-apiVersion: v1
-kind: Service
-metadata:
-  name: spitfire-lb
-spec:
-  type: LoadBalancer
-  ports:
-  - port: 80
-    targetPort: 8080
-  selector:
-    app: spitfire
-    release: spitfire
-EOF
-
-  cat << EOF | kubectl apply -f -
-apiVersion: v1
-kind: Service
-metadata:
-  name: spitfire-spark-ui-lb
-spec:
-  type: LoadBalancer
-  ports:
-  - port: 80
-    targetPort: 4040
-  selector:
-    app: spitfire
-    release: spitfire
-EOF
 
 echo """
 # Check HDFS
@@ -152,30 +122,13 @@ function explorer() {
     --set microsoft.redirect="" \
     --set microsoft.secret="seuLJSMO4\$ueukZU4578)}@" \
     --set microsoft.scope="User.ReadBasic.All" \
-    --set spitfire.rest="http://$SPITFIRE_LB_HOSTNAME" \
+    --set spitfire.rest="https://$SPITFIRE_LB_HOSTNAME" \
     --set spitfire.ws="ws://$SPITFIRE_LB_HOSTNAME" \
     --set twitter.consumerKey="Fsy5JzXec7wY5mPPsEdsNkAe4" \
     --set twitter.consumerSecret="q0suooaCz17lkiHZZi35OoXfBJrAPRyUBi0AssEppP9YXxBSRz" \
     --set twitter.redirect="" \
     explorer \
     -n explorer
-
-  cat << EOF | kubectl apply -f -
-apiVersion: v1
-kind: Service
-metadata:
-  name: explorer-lb
-  annotations:
-    service.beta.kubernetes.io/aws-load-balancer-connection-idle-timeout: 3600
-spec:
-  type: LoadBalancer
-  ports:
-  - port: 80
-    targetPort: 9091
-  selector:
-    app: explorer
-    release: explorer
-EOF
 
   echo "
 
@@ -270,9 +223,8 @@ EOF
 
 function ingress() {
 
-  helm install ingress \
+  helm upgrade ingress ingress \
     -f ingress/values-explorer.yaml \
-    -n ingress
 
   export DNS_NAME=$DNS_NAME
 
@@ -300,6 +252,31 @@ EOF
 
 #   kubectl describe certificate explorer-letsencrypt-cert
 #   kubectl get secret explorer-letsencrypt-tls -o yaml
+  cat << EOF | kubectl apply -f -
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: spitfire
+  namespace: default
+  annotations:
+    nginx.org/websocket-services: "spitfire-spitfire"
+    nginx.org/proxy-connect-timeout: "3600"
+    nginx.org/proxy-read-timeout: "3600"
+    nginx.org/client-max-body-size: "4m"
+spec:
+  rules:
+  - host: spitfire.platform.radiusiot.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: spitfire-spitfire
+          servicePort: 8080
+      - path: /spitfire/ws
+        backend:
+          serviceName: spitfire-spitfire
+          servicePort: 8080
+EOF
 
   cat << EOF | kubectl apply -f -
 apiVersion: extensions/v1beta1
@@ -320,10 +297,6 @@ spec:
   - host: "${DNS_NAME}"
     http:
       paths:
-      - path: /spitfire
-        backend:
-          serviceName: spitfire-spitfire
-          servicePort: 8080
       - path: /kuber
         backend:
           serviceName: explorer-explorer
