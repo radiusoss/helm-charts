@@ -84,26 +84,17 @@ echo """
 }
 
 function explorer() {
-
-  echo "
   
-# Before running the next step, check the LoadBalancer Ingress value for \`spitifire-lb\` (rerun in a few minutes if no hostname is shown)
-
-   kubectl describe services spitfire-lb | grep Ingress
-"
-  kubectl describe services spitfire-lb
-  echo
-  kubectl describe services spitfire-lb | grep Ingress
-  echo
   echo "Please enter the hostname created for the spitfire-lb:"
-  read SPITFIRE_LB_HOSTNAME
+  #read SPITFIRE_LB_HOSTNAME
+  export SPITFIRE_LB_HOSTNAME=spitfire.radiusiot.com
   echo
   echo "You entered: $SPITFIRE_LB_HOSTNAME"
   echo
   echo "We will now deploy Kuber Board..."
   echo
 
-  helm install \
+  helm upgrade explorer-explorer \
     --set explorer.hostNetwork=false \
     --set explorer.imagePullPolicy="Always" \
     --set google.apiKey="AIzaSyA4GOtTmfHmAL5t8jn0LBZ_SsInQukugAU" \
@@ -123,12 +114,10 @@ function explorer() {
     --set microsoft.secret="seuLJSMO4\$ueukZU4578)}@" \
     --set microsoft.scope="User.ReadBasic.All" \
     --set spitfire.rest="https://$SPITFIRE_LB_HOSTNAME" \
-    --set spitfire.ws="ws://$SPITFIRE_LB_HOSTNAME" \
+    --set spitfire.ws="wss://$SPITFIRE_LB_HOSTNAME" \
     --set twitter.consumerKey="Fsy5JzXec7wY5mPPsEdsNkAe4" \
     --set twitter.consumerSecret="q0suooaCz17lkiHZZi35OoXfBJrAPRyUBi0AssEppP9YXxBSRz" \
-    --set twitter.redirect="" \
-    explorer \
-    -n explorer
+    --set twitter.redirect=""
 
   echo "
 
@@ -144,114 +133,21 @@ function explorer() {
 
    kubectl describe services explorer-lb | grep Ingress
 "
-  kubectl describe services explorer-lb
-  echo
-  kubectl describe services explorer-lb | grep Ingress
-  echo
 
 }
 
 function cert-manager() {
-
-  export COMMON_NAME=$COMMON_NAME
-  export DNS_NAME=$DNS_NAME
-
-  openssl genrsa -out ca.key 2048
-  openssl req -x509 -new -nodes -key ca.key -subj "/CN=${COMMON_NAME}" -days 3650 -out ca.crt
   kubectl create secret tls issuer-key --cert=ca.crt --key=ca.key --namespace default
-
-  helm install \
-    cert-manager \
-    --name cert-manager \
-    --namespace default
-
-  cat << EOF | kubectl apply -f -
-apiVersion: certmanager.k8s.io/v1alpha1
-kind: Issuer
-metadata:
-  name: ca-issuer
-  namespace: default
-spec:
-  ca:
-    secretName: issuer-key
-EOF
-
-  cat << EOF | kubectl apply -f -
-apiVersion: certmanager.k8s.io/v1alpha1
-kind: Certificate
-metadata:
-  name: explorer-ca-cert
-  namespace: default
-spec:
-  secretName: explorer-ca-tls
-  issuerRef:
-    name: ca-issuer
-    kind: Issuer
-  commonName: "${COMMON_NAME}"
-  dnsNames:
-  - "${DNS_NAME}"
-EOF
-
-#   kubectl get secret explorer-ca-tls -o yaml
-#   kubectl describe certificate explorer-ca-cert
-
-  cat << EOF | kubectl apply -f -
-apiVersion: certmanager.k8s.io/v1alpha1
-kind: Issuer
-metadata: 
-  name: letsencrypt-issuer
-  namespace: default
-spec:
-  acme:
-    server: https://acme-v01.api.letsencrypt.org/directory
-    email: eric@datalayer.io
-    privateKeySecretRef:
-      name: issuer-key
-    http01: {}
-#     dns01:
-#      providers:
-#       - name: route53
-#         route53:
-#           accessKeyID: xxx
-#           region: eu-central-1
-#           secretAccessKeySecretRef:
-#             name: route53-secret-key
-#             key: aws-id-secret
-EOF
-
 }
 
 function ingress() {
+  helm upgrade ingress ingress -f ingress/values-explorer.yaml
+  
+  helm upgrade alb-ingress alb-ingress-controller-helm -f alb-ingress-controller-helm/values-alb.yaml
 
-  helm upgrade ingress ingress \
-    -f ingress/values-explorer.yaml \
+  #helm registry upgrade quay.io/coreos/alb-ingress-controller-helm alb-ingress -f ingress/values-alb.yaml
 
   export DNS_NAME=$DNS_NAME
-
-  cat << EOF | kubectl apply -f -
-apiVersion: certmanager.k8s.io/v1alpha1
-kind: Certificate
-metadata:
-  name: explorer-cert
-  namespace: default
-spec:
-  secretName: explorer-cert-tls
-  issuerRef:
-    name: letsencrypt-issuer
-    kind: Issuer
-  commonName: "${COMMON_NAME}"
-  acme:
-    config:
-    - http01:
-        ingressClass: nginx
-      domains:
-      - "${DNS_NAME}"
-#    - dns01:
-#        provider: route53
-EOF
-
-#   kubectl describe certificate explorer-letsencrypt-cert
-#   kubectl get secret explorer-letsencrypt-tls -o yaml
   cat << EOF | kubectl apply -f -
 apiVersion: extensions/v1beta1
 kind: Ingress
@@ -259,23 +155,24 @@ metadata:
   name: spitfire
   namespace: default
   annotations:
-    nginx.org/websocket-services: "spitfire-spitfire"
-    nginx.org/proxy-connect-timeout: "3600"
-    nginx.org/proxy-read-timeout: "3600"
-    nginx.org/client-max-body-size: "4m"
+    "kubernetes.io/ingress.class": "alb"
+    "alb.ingress.kubernetes.io/scheme": "internet-facing"
+    "alb.ingress.kubernetes.io/subnets": "subnet-fe6fbd87,subnet-0a8e7541"
+    "alb.ingress.kubernetes.io/backend-protocol": "HTTP"
+    "alb.ingress.kubernetes.io/healthcheck-protocol": "HTTP"
+    "alb.ingress.kubernetes.io/healthcheck-path": "/spitfire"
+    "alb.ingress.kubernetes.io/certificate-arn": "arn:aws:acm:us-west-2:100392638540:certificate/faa2bfbf-ff19-4e12-9bbe-220af0b77146"
+    "alb.ingress.kubernetes.io/connection-idle-timeout": "3600"
+    "alb.ingress.kubernetes.io/successCodes": "200,202,302"
 spec:
   rules:
-  - host: spitfire.platform.radiusiot.com
+  - host: spitfire.radiusiot.com
     http:
-      paths:
+      paths: 
       - path: /
         backend:
           serviceName: spitfire-spitfire
-          servicePort: 8080
-      - path: /spitfire/ws
-        backend:
-          serviceName: spitfire-spitfire
-          servicePort: 8080
+          servicePort: 80
 EOF
 
   cat << EOF | kubectl apply -f -
@@ -285,22 +182,17 @@ metadata:
   name: explorer
   namespace: default
   annotations:
-#    "nginx.org/websocket-services": "spitfire-spitfire,explorer-explorer"
-#    "certmanager.k8s.io/issuer": "letsencrypt-issuer"
-#    "certmanager.k8s.io/acme-challenge-type": "http01"
+    "kubernetes.io/ingress.class": "nginx"
+    "ingress.kubernetes.io/ssl-redirect": "true"
 spec:
 #  tls:
-#    - hosts:
-#      - "${DNS_NAME}"
-#      secretName: explorer-cert-tls
+#  - hosts:
+#    - "platform.radiusiot.com"
+#    secretName: issuer-key
   rules:
-  - host: "${DNS_NAME}"
+  - host: platform.radiusiot.com
     http:
-      paths:
-      - path: /kuber
-        backend:
-          serviceName: explorer-explorer
-          servicePort: 9091
+      paths: 
       - path: /
         backend:
           serviceName: explorer-explorer

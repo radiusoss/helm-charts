@@ -1,0 +1,10 @@
+awsRegion: us-west-2
+clusterName: k8s
+controller:
+  image:
+    tag: "1.0-alpha.8"
+  nodeSelector:
+    kuber-role: "worker"
+defaultBackend:
+  nodeSelector:
+    kuber-role: "worker"

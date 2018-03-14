@@ -20,7 +20,7 @@ spec:
     spec:
       terminationGracePeriodSeconds: 0
       nodeSelector:
-        kuber-role: master
+        kuber-role: worker
       hostNetwork: {{ .Values.explorer.hostNetwork }}
       containers:
         - name: explorer
