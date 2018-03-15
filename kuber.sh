@@ -49,19 +49,16 @@ function hdfs() {
 }
 
 function spark() {
-  helm install spark \
-    --set spark.imagePullPolicy=Always \
-    -n spark
+  helm upgrade spark spark \
+    --set spark.imagePullPolicy=Always 
 }
 
 function spitfire() {
 
-  helm install \
+  helm upgrade spitfire spitfire \
     --set spitfire.hostNetwork=false \
     --set spitfire.imagePullPolicy=Always \
-    --set spitfire.notebookRepo=https://github.com/radiusoss/notebook-init.git \
-    spitfire \
-    -n spitfire
+    --set spitfire.notebookRepo=https://github.com/radiusoss/notebook-init.git 
 
 echo """
 # Check HDFS
@@ -94,7 +91,7 @@ function explorer() {
   echo "We will now deploy Kuber Board..."
   echo
 
-  helm upgrade explorer-explorer \
+  helm upgrade explorer explorer \
     --set explorer.hostNetwork=false \
     --set explorer.imagePullPolicy="Always" \
     --set google.apiKey="AIzaSyA4GOtTmfHmAL5t8jn0LBZ_SsInQukugAU" \

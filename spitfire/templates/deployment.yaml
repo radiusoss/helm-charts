@@ -54,7 +54,7 @@ spec:
             - name: ZEPPELIN_JAVA_OPTS
               value: "-Djava.net.preferIPv4Stack=true"
             - name: ZEPPELIN_MEM
-              value: "-Xms2048m -Xmx4096m"
+              value: "-Xms4096m -Xmx8192m"
 #            - name: ZEPPELIN_JAVA_OPTS
 #              value: >-
 #                -Dspark.driver.memory={{ .Values.spark.driverMemory }}
